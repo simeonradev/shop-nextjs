@@ -12,9 +12,11 @@ import {
   CLOSE_MODAL,
   MODAL,
 } from "../core/actions";
+import { useRouter } from "next/router";
 
 const ProductList = ({ products, ...rest }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleAddToCart = (product) => {
     dispatch({
@@ -43,7 +45,7 @@ const ProductList = ({ products, ...rest }) => {
                 type: RECENTLY_VIEWED,
                 data: productDataFilteredBySearch.id,
               });
-              navigate(`/product/${productDataFilteredBySearch.id}`);
+              router.push(`/product/${productDataFilteredBySearch.id}`);
             }}
             key={productDataFilteredBySearch.id}
             {...productDataFilteredBySearch}

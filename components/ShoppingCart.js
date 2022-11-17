@@ -1,17 +1,17 @@
-import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import CartItem from "./CartItem";
+import { Box, Typography } from "@mui/material";
+import ShoppingCartItem from "./ShoppingCartItem";
 
-const Cart = ({ cartItems, addToCart, removeFromCart }) => {
+const ShoppingCart = ({ cartItems, addToCart, removeFromCart }) => {
   const calculateTotal = (items) =>
     items.reduce((acc, item) => acc + item.amount * item.price, 0);
 
   const hasFeaturedProduct = useSelector((state) => {
-    return state.productCartReducer.hasFeatured;
+    return state.productCart.hasFeatured;
   });
 
   const individualProductAdditionsArray = useSelector((state) => {
-    return state.productCartReducer.individualProductAdditionsArray;
+    return state.productCart.individualProductAdditionsArray;
   });
 
   const ImportanceOfCart = () => {
@@ -35,7 +35,7 @@ const Cart = ({ cartItems, addToCart, removeFromCart }) => {
       </Typography>
       {cartItems.length === 0 ? <p>No items in cart.</p> : null}
       {cartItems.map((item) => (
-        <CartItem
+        <ShoppingCartItem
           key={item.id}
           item={item}
           addToCart={addToCart}
@@ -60,4 +60,4 @@ const Cart = ({ cartItems, addToCart, removeFromCart }) => {
   );
 };
 
-export default Cart;
+export default ShoppingCart;

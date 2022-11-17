@@ -4,7 +4,7 @@ import SideNavBar from "../components/SideNavBar";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-import { Box, useScrollTrigger, Fade, Fab } from "@mui/material";
+import { Box, useScrollTrigger, Fade, Fab, Typography } from "@mui/material";
 
 import { useSelector } from "react-redux";
 import ProductList from "../components/ProductList";
@@ -41,11 +41,11 @@ const Search = (props) => {
   };
 
   const searchValue = useSelector((state) => {
-    return state.searchTermReducer.searchTerm;
+    return state.searchTerm;
   });
 
   const productDataArray = useSelector((state) => {
-    return state.productDataReducer.productDataArray;
+    return state.productData;
   });
 
   useEffect(() => {
@@ -55,12 +55,18 @@ const Search = (props) => {
       })
     );
   }, [searchValue]);
-
+  console.log(filteredProducts);
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "50px" }}>
         <SideNavBar data={filteredBySearch} onFilter={onFilter}></SideNavBar>
-        <ProductList products={filteredProducts} p={3} />
+        {filteredProducts.length === 0 ? (
+          <Typography variant="h4">
+            No products found, try searching something else
+          </Typography>
+        ) : (
+          <ProductList products={filteredProducts} p={3} />
+        )}
       </Box>
       <ScrollTop {...props}>
         <Fab size="small" aria-label="scroll back to top">

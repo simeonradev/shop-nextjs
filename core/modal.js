@@ -2,7 +2,7 @@ import { Modal, Box } from "@mui/material";
 
 import { MODAL, CLOSE_MODAL } from "./actions";
 
-const initialState = { modal: null };
+const initialState = null;
 
 const styleModal = {
   backgroundColor: "white",
@@ -17,22 +17,21 @@ const styleModal = {
   p: 4,
 };
 
-export const modalReducer = (state = initialState, action) => {
+export const modal = (state = initialState, action) => {
   switch (action.type) {
     case MODAL:
-      return {
-        modal: (
-          <Modal
-            open={true}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={styleModal}>{action.data}</Box>
-          </Modal>
-        ),
-      };
+      return (
+        <Modal
+          open={true}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={styleModal}>{action.data}</Box>
+        </Modal>
+      );
+
     case CLOSE_MODAL:
-      return { modal: null };
+      return null;
 
     default:
       return state;

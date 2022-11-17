@@ -1,11 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
 
 import { useDispatch, useSelector } from "react-redux";
-// import { useParams } from "react-router-dom";
 
-import { ADD_PRODUCT_TO_CART } from "../core/actions";
+import { ADD_PRODUCT_TO_CART } from "../../core/actions";
 
-import ProductList from "../components/ProductList";
+import { useRouter } from "next/router";
+
+import ProductList from "../../components/ProductList";
 
 const style = {
   display: "flex",
@@ -17,17 +18,18 @@ const style = {
 };
 
 const ProductPage = (props) => {
-  const { productId } = useParams();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const { productId } = router.query;
 
   const productDataArray = useSelector((state) => {
-    return state.productDataReducer.productDataArray;
+    return state.productData;
   });
 
   const selectedProduct = productDataArray.find((product) => {
     return product.id === productId;
   });
-
-  const dispatch = useDispatch();
 
   const handleAddToCart = () => {
     dispatch({

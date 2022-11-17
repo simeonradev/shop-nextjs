@@ -7,7 +7,7 @@ const initialState = {
   individualProductAdditionsArray: [],
 };
 
-export const productCartReducer = (state = initialState, action) => {
+export const productCart = (state = initialState, action) => {
   switch (action.type) {
     case ADD_PRODUCT_TO_CART:
       const isItemInCart = state.productCartArray.find(

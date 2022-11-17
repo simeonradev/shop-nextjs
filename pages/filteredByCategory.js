@@ -7,16 +7,16 @@ import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
 import ProductList from "../components/ProductList";
 
-const FilteredByCategoryPage = () => {
+const FilteredByCategory = () => {
   const [filteredByCategory, setFilteredByCategory] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(filteredByCategory);
 
   const productDataArray = useSelector((state) => {
-    return state.productDataReducer.productDataArray;
+    return state.productData;
   });
 
   const selectedCategory = useSelector((state) => {
-    return state.selectedCategoryReducer.selectedCategory;
+    return state.selectedCategory;
   });
 
   const onFilter = (filteredProducts) => {
@@ -40,4 +40,4 @@ const FilteredByCategoryPage = () => {
   );
 };
 
-export default FilteredByCategoryPage;
+export default FilteredByCategory;

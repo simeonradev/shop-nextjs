@@ -4,11 +4,11 @@ import ProductCard from "../components/ProductCard";
 
 const MyProfile = () => {
   const currentUser = useSelector((state) => {
-    return state.currentUserReducer.currentUser;
+    return state.currentUser.loggedInUser;
   });
 
   const isLogedIn = useSelector((state) => {
-    return state.currentUserReducer.logedIn;
+    return state.currentUser.isLoggedIn;
   });
 
   return (

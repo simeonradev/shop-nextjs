@@ -26,7 +26,7 @@ const ProductCard = (props) => {
         <ProductCardBox onClick={props.onClick}>
           <Box sx={{ textAlign: "center" }}>
             {props.img === undefined ? (
-              <ImgBox component="img" alt={props.id} src={didi} />
+              <ImgBox component="img" alt={props.id} src="/images/didi.jpg" />
             ) : (
               <ImgBox component="img" alt={props.id} src={props.img} />
             )}

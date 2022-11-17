@@ -28,7 +28,7 @@ const productDataArray = [
     location: "Sofia",
     rating: 5,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "845c341b-adb4-4666-8963-02cbf7d0f3e7",
@@ -39,7 +39,7 @@ const productDataArray = [
     location: "Sofia",
     rating: 1,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "d37b6fbd-c97e-429e-9347-7996d231bbff",
@@ -50,7 +50,7 @@ const productDataArray = [
     location: "Sofia",
     rating: 4,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "2c850fe2-67fb-4f0b-b9af-b7c22eab5493",
@@ -61,7 +61,7 @@ const productDataArray = [
     location: "Plovdiv",
     rating: 1,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "acafc0af-e096-4615-9a92-2ee5f5cf8770",
@@ -72,7 +72,7 @@ const productDataArray = [
     location: "Plovdiv",
     rating: 5,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "74eec488-d13e-4b7e-bb8b-697392ce639d",
@@ -83,7 +83,7 @@ const productDataArray = [
     location: "Plovdiv",
     rating: 3,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "fde74ec8-e9e5-489a-9cdf-bd9f9cb73738",
@@ -94,7 +94,7 @@ const productDataArray = [
     location: "Stara Zagora",
     rating: 5,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "e33950b0-4149-4345-bf71-a9fd4f0327cd",
@@ -105,7 +105,7 @@ const productDataArray = [
     location: "Stara Zagora",
     rating: 3,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "4b3d8ef3-6887-4226-bb5e-1fac61ee13dc",
@@ -115,7 +115,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -127,7 +127,7 @@ const productDataArray = [
     location: "Stara Zagora",
     rating: 1,
     featured: true,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
   },
   {
     id: "1fff66d2-9253-44e9-a64a-dff637002af9",
@@ -137,7 +137,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -148,7 +148,7 @@ const productDataArray = [
     inStock: true,
     location: "Plovdiv",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -159,7 +159,7 @@ const productDataArray = [
     inStock: false,
     location: "Sofia",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -170,7 +170,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -181,7 +181,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -192,7 +192,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -203,7 +203,7 @@ const productDataArray = [
     inStock: false,
     location: "Sofia",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -214,7 +214,7 @@ const productDataArray = [
     inStock: false,
     location: "Stara Zagora",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -225,7 +225,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -236,7 +236,7 @@ const productDataArray = [
     inStock: true,
     location: "Plovdiv",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -247,7 +247,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -258,7 +258,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -269,7 +269,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -280,7 +280,7 @@ const productDataArray = [
     inStock: false,
     location: "Sofia",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -291,7 +291,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -302,7 +302,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -313,7 +313,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -324,7 +324,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -335,7 +335,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -346,7 +346,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -357,7 +357,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -368,7 +368,7 @@ const productDataArray = [
     inStock: true,
     location: "Plovdiv",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -379,7 +379,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -390,7 +390,7 @@ const productDataArray = [
     inStock: false,
     location: "Stara Zagora",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -401,7 +401,7 @@ const productDataArray = [
     inStock: false,
     location: "Stara Zagora",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -412,7 +412,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -423,7 +423,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -434,7 +434,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -445,7 +445,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -456,7 +456,7 @@ const productDataArray = [
     inStock: false,
     location: "Stara Zagora",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -467,7 +467,7 @@ const productDataArray = [
     inStock: false,
     location: "Stara Zagora",
     rating: 4,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -478,7 +478,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -489,7 +489,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 1,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -500,7 +500,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -511,7 +511,7 @@ const productDataArray = [
     inStock: false,
     location: "Plovdiv",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -522,7 +522,7 @@ const productDataArray = [
     inStock: true,
     location: "Sofia",
     rating: 5,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -533,7 +533,7 @@ const productDataArray = [
     inStock: true,
     location: "Stara Zagora",
     rating: 3,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -544,7 +544,7 @@ const productDataArray = [
     inStock: true,
     location: "Plovdiv",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
   {
@@ -555,7 +555,7 @@ const productDataArray = [
     inStock: true,
     location: "Plovdiv",
     rating: 2,
-    img: "/images/trfProduct",
+    img: "/images/trfProduct.jpg",
     featured: false,
   },
 ];

@@ -1,8 +1,12 @@
-import { Box, Button, Link } from "@mui/material";
-
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SELECTED_CATEGORY } from "../core/actions";
+import { Box, Button } from "@mui/material";
+
+import { SELECTED_CATEGORY, GET_PRODUCT_DATA_ARRAY } from "../core/actions";
+
 import ProductList from "../components/ProductList";
+import productDataArray from "../components/productDataArray";
+import { useRouter } from "next/router";
 
 const style = {
   display: "flex",
@@ -15,6 +19,7 @@ const style = {
 
 const HomePage = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   ///////////////////////// Use backend data ///////////////////////////////
   // useEffect(() => {
@@ -38,7 +43,7 @@ const HomePage = () => {
   // }, []);
 
   // const globalModal = useSelector((state) => {
-  //   return state.modalReducer.modal;
+  //   return state.modal.modal;
   // });
 
   // useEffect(() => {
@@ -48,68 +53,69 @@ const HomePage = () => {
   //   });
   // }, [dispatch]);
 
-  const productDataArray = useSelector((state) => {
-    return state.productDataReducer.productDataArray;
+  const productDataArrayFromReducer = useSelector((state) => {
+    return state.productData;
   });
 
   const recentlyViewedArray = useSelector((state) => {
-    return state.recentlyViewedReducer.recentlyViewedArray;
+    return state.recentlyViewed;
   });
 
   const recentlyViewedProducts = recentlyViewedArray.map((productId) =>
-    productDataArray.find((product) => product.id === productId)
+    productDataArrayFromReducer.find((product) => product.id === productId)
   );
 
+  useEffect(() => {
+    dispatch({
+      type: GET_PRODUCT_DATA_ARRAY,
+      data: productDataArray,
+    });
+  }, [dispatch]);
   return (
-    <Box sx={{ pt: "30px" }}>
+    <Box sx={{ pt: "60px" }}>
       <br />
       <Box>
         Categories:
-        <Link href="/filteredByCategoryPage">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "car" });
-            }}
-          >
-            Car
-          </Button>
-        </Link>
-        <Link href="/filteredByCategoryPage">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
-            }}
-          >
-            Clothes
-          </Button>
-        </Link>
-        <Link href="/filteredByCategoryPage">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
-            }}
-          >
-            Electronics
-          </Button>
-        </Link>
-        <Link href="/filteredByCategoryPage">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "food" });
-            }}
-          >
-            Food
-          </Button>
-        </Link>
-        <Link href="/filteredByCategoryPage">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "garden" });
-            }}
-          >
-            Garden
-          </Button>
-        </Link>
+        <Button
+          onClick={() => {
+            dispatch({ type: SELECTED_CATEGORY, data: "car" });
+            router.push("/filteredByCategory");
+          }}
+        >
+          Car
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
+            router.push("/filteredByCategory");
+          }}
+        >
+          Clothes
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
+            router.push("/filteredByCategory");
+          }}
+        >
+          Electronics
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch({ type: SELECTED_CATEGORY, data: "food" });
+            router.push("/filteredByCategory");
+          }}
+        >
+          Food
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch({ type: SELECTED_CATEGORY, data: "garden" });
+            router.push("/filteredByCategory");
+          }}
+        >
+          Garden
+        </Button>
       </Box>
       <br />
       <ProductList

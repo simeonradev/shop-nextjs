@@ -9,11 +9,3 @@ export const RECENTLY_VIEWED = "RECENTLY_VIEWED";
 export const OPEN_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";
 export const MODAL = "MODAL";
-
-export const counterActionTypes = {
-  INCREMENT: "INCREMENT",
-};
-
-export const incrementCounter = () => {
-  return { type: counterActionTypes.INCREMENT };
-};

@@ -13,7 +13,7 @@ const CartItemBody = styled(Box)`
   align-items: center;
 `;
 
-const CartItem = ({ item, addToCart, removeFromCart }) => {
+const ShoppingCartItem = ({ item, addToCart, removeFromCart }) => {
   return (
     <CartItemMain>
       <Box minWidth="200px" sx={{ display: "grid" }}>
@@ -55,4 +55,4 @@ const CartItem = ({ item, addToCart, removeFromCart }) => {
   );
 };
 
-export default CartItem;
+export default ShoppingCartItem;
