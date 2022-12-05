@@ -8,7 +8,6 @@ export const recentlyViewed = (state = initialState, action) => {
       const isItemRecentlyViewed = state.find(
         (itemId) => itemId === action.data
       );
-      console.log(isItemRecentlyViewed);
       return isItemRecentlyViewed ? state : [...state, action.data];
 
     default:

@@ -25,12 +25,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 import ShoppingCart from "./ShoppingCart";
-import { useRouter } from "next/router";
+import Link from "./Link";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selected, setSelected] = useState("");
-  const router = useRouter();
 
   //////////////////////////////// Drop Down Menus /////////////////////////////////
 
@@ -134,14 +133,16 @@ const NavBar = () => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Button onClick={() => router.push("/")}>
-            <Box
-              component="img"
-              style={{ height: "40px" }}
-              alt={"Didi shop logo"}
-              src="/images/DidiShopLogo.png"
-            />
-          </Button>
+          <Link href="/">
+            <Button>
+              <Box
+                component="img"
+                style={{ height: "40px" }}
+                alt={"Didi shop logo"}
+                src="/images/DidiShopLogo.png"
+              />
+            </Button>
+          </Link>
           <Box sx={{ display: "flex" }}>
             <Autocomplete
               onInputChange={(e) => setSearchValue(e.target.value)}
@@ -156,12 +157,11 @@ const NavBar = () => {
                 return <TextField {...params} label="Search" size="small" />;
               }}
             />
-            <IconButton
-              variant="outlined"
-              onClick={() => router.push("/search")}
-            >
-              <SearchIcon />
-            </IconButton>
+            <Link href="/search">
+              <IconButton variant="outlined">
+                <SearchIcon />
+              </IconButton>
+            </Link>
           </Box>
         </Box>
 
@@ -185,68 +185,75 @@ const NavBar = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem
-              onClick={() => {
-                dispatch({ type: SELECTED_CATEGORY, data: "car" });
-                router.push("/filteredByCategory");
-              }}
-            >
-              Car
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
-                router.push("/filteredByCategory");
-              }}
-            >
-              Clothes
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
-                router.push("/filteredByCategory");
-              }}
-            >
-              Electronics
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => {
-                dispatch({ type: SELECTED_CATEGORY, data: "food" });
-                router.push("/filteredByCategory");
-              }}
-            >
-              Food
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                dispatch({ type: SELECTED_CATEGORY, data: "garden" });
-                router.push("/filteredByCategory");
-              }}
-            >
-              Garden
-            </MenuItem>
+            <Link href="/filteredByCategory">
+              <MenuItem
+                onClick={() => {
+                  dispatch({ type: SELECTED_CATEGORY, data: "car" });
+                  handleClose();
+                }}
+              >
+                Car
+              </MenuItem>
+            </Link>
+            <Link href="/filteredByCategory">
+              <MenuItem
+                onClick={() => {
+                  dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
+                  handleClose();
+                }}
+              >
+                Clothes
+              </MenuItem>
+            </Link>
+            <Link href="/filteredByCategory">
+              <MenuItem
+                onClick={() => {
+                  dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
+                  handleClose();
+                }}
+              >
+                Electronics
+              </MenuItem>
+            </Link>
+            <Link href="/filteredByCategory">
+              <MenuItem
+                onClick={() => {
+                  dispatch({ type: SELECTED_CATEGORY, data: "food" });
+                  handleClose();
+                }}
+              >
+                Food
+              </MenuItem>
+            </Link>
+            <Link href="/filteredByCategory">
+              <MenuItem
+                onClick={() => {
+                  dispatch({ type: SELECTED_CATEGORY, data: "garden" });
+                  handleClose();
+                }}
+              >
+                Garden
+              </MenuItem>
+            </Link>
           </Menu>
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Stack direction="row" spacing={10}>
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => router.push("/test")}
-            >
-              TEST
-            </Button>
-            <Button
-              variant="text"
-              color="info"
-              onClick={() => router.push("/contacts")}
-            >
-              Contact Us
-            </Button>
+            <Link href="/test">
+              <Button variant="contained" color="success">
+                TEST
+              </Button>
+            </Link>
+            <Link href="/contacts">
+              <Button variant="text" color="info">
+                Contact Us
+              </Button>
+            </Link>
           </Stack>
-          <Button onClick={() => setCartOpen(true)}>
+          <Button
+            onClick={() => (cartOpen ? setCartOpen(false) : setCartOpen(true))}
+          >
             <AddShoppingCartIcon variant="outlined" />
             <Badge
               badgeContent={getTotalItems(productCartArray)}
@@ -300,14 +307,18 @@ const NavBar = () => {
                   "aria-labelledby": "profile-button",
                 }}
               >
-                <MenuItem onClick={() => router.push("/profile")}>
-                  My Profile
-                </MenuItem>
+                <Link href="/profile">
+                  <MenuItem onClick={handleCloseProfileMenu}>
+                    My Profile
+                  </MenuItem>
+                </Link>
                 <MenuItem onClick={handleLogOut}>Logout</MenuItem>
               </Menu>
             </Box>
           ) : (
-            <Button onClick={() => router.push("/login")}>Login</Button>
+            <Link href="/login">
+              <Button>Login</Button>
+            </Link>
           )}
         </Box>
       </Box>

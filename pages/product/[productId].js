@@ -34,7 +34,7 @@ const ProductPage = (props) => {
   const handleAddToCart = () => {
     dispatch({
       type: ADD_PRODUCT_TO_CART,
-      data: props,
+      data: selectedProduct,
     });
   };
 
@@ -47,6 +47,7 @@ const ProductPage = (props) => {
   };
 
   if (productDataArray.length === 0) return <Box>Loading</Box>;
+  console.log(selectedProduct);
   return (
     <Box
       sx={{

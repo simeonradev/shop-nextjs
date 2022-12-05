@@ -27,7 +27,6 @@ const ShoppingCart = ({ cartItems, addToCart, removeFromCart }) => {
       return "is Special";
     }
   };
-
   return (
     <Box sx={{ paddingTop: "60px" }}>
       <Typography variant="h4">

@@ -1,5 +1,6 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
+import Link from "./Link";
 
 const ImgBox = styled(Box)`
   border: 1px solid #00000080;
@@ -22,8 +23,8 @@ const ProductCardBox = styled(Box)`
 const ProductCard = (props) => {
   return (
     <Box>
-      <Box>
-        <ProductCardBox onClick={props.onClick}>
+      <Link href={`/product/${props.id}`}>
+        <ProductCardBox onClick={props.onClick} sx={{ cursor: "default" }}>
           <Box sx={{ textAlign: "center" }}>
             {props.img === undefined ? (
               <ImgBox component="img" alt={props.id} src="/images/didi.jpg" />
@@ -43,8 +44,8 @@ const ProductCard = (props) => {
           <Typography>Rating: {props.rating}</Typography>
           <Typography>InStock: {JSON.stringify(props.inStock)}</Typography>
         </ProductCardBox>
-        {props.footerActions}
-      </Box>
+      </Link>
+      {props.footerActions}
     </Box>
   );
 };

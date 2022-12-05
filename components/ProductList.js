@@ -12,11 +12,14 @@ import {
   CLOSE_MODAL,
   MODAL,
 } from "../core/actions";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
+import ModalTest from "./Modal";
 
 const ProductList = ({ products, ...rest }) => {
   const dispatch = useDispatch();
-  const router = useRouter();
+  // const router = useRouter();
+
+  const { showModal, hideModal } = useGlobalModal();
 
   const handleAddToCart = (product) => {
     dispatch({
@@ -45,7 +48,7 @@ const ProductList = ({ products, ...rest }) => {
                 type: RECENTLY_VIEWED,
                 data: productDataFilteredBySearch.id,
               });
-              router.push(`/product/${productDataFilteredBySearch.id}`);
+              // router.push(`/product/${productDataFilteredBySearch.id}`);
             }}
             key={productDataFilteredBySearch.id}
             {...productDataFilteredBySearch}
@@ -65,18 +68,32 @@ const ProductList = ({ products, ...rest }) => {
                     dispatch({
                       type: MODAL,
                       data: (
-                        <>
-                          <ProductPreviewModal
-                            handleCloseModal={handleCloseModal}
-                            key={productDataFilteredBySearch.id}
-                            {...productDataFilteredBySearch}
-                          ></ProductPreviewModal>
-                        </>
+                        <ProductPreviewModal
+                          handleCloseModal={handleCloseModal}
+                          key={productDataFilteredBySearch.id}
+                          {...productDataFilteredBySearch}
+                        ></ProductPreviewModal>
                       ),
                     });
                   }}
                 >
-                  Preview
+                  Old
+                </Button>
+                <ModalTest
+                  key={productDataFilteredBySearch.id}
+                  {...productDataFilteredBySearch}
+                ></ModalTest>
+                <Button
+                  onClick={() =>
+                    showModal(
+                      <Box>
+                        content
+                        <Button onClick={() => hideModal()}> Close</Button>
+                      </Box>
+                    )
+                  }
+                >
+                  Open Modal
                 </Button>
               </Box>
             }

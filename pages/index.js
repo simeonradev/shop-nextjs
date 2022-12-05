@@ -2,11 +2,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button } from "@mui/material";
 
-import { SELECTED_CATEGORY, GET_PRODUCT_DATA_ARRAY } from "../core/actions";
+import {
+  SELECTED_CATEGORY,
+  GET_PRODUCT_DATA_ARRAY,
+  INCREMENT,
+  DECREMENT,
+} from "../core/actions";
 
 import ProductList from "../components/ProductList";
 import productDataArray from "../components/productDataArray";
 import { useRouter } from "next/router";
+import Link from "../components/Link";
 
 const style = {
   display: "flex",
@@ -16,7 +22,6 @@ const style = {
   height: "300px",
   overflowX: "scroll",
 };
-
 const HomePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -71,51 +76,80 @@ const HomePage = () => {
       data: productDataArray,
     });
   }, [dispatch]);
+
+  const count = useSelector((state) => {
+    return state.counter.count;
+  });
+
   return (
     <Box sx={{ pt: "60px" }}>
+      {/* {count}
+      <Box>
+        <Button
+          onClick={() => {
+            dispatch({ type: INCREMENT });
+          }}
+        >
+          +
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch({ type: DECREMENT });
+          }}
+        >
+          -
+        </Button>
+      </Box> */}
+
       <br />
       <Box>
         Categories:
-        <Button
-          onClick={() => {
-            dispatch({ type: SELECTED_CATEGORY, data: "car" });
-            router.push("/filteredByCategory");
-          }}
-        >
-          Car
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
-            router.push("/filteredByCategory");
-          }}
-        >
-          Clothes
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
-            router.push("/filteredByCategory");
-          }}
-        >
-          Electronics
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: SELECTED_CATEGORY, data: "food" });
-            router.push("/filteredByCategory");
-          }}
-        >
-          Food
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: SELECTED_CATEGORY, data: "garden" });
-            router.push("/filteredByCategory");
-          }}
-        >
-          Garden
-        </Button>
+        <Link href="/filteredByCategory">
+          <Button
+            onClick={() => {
+              dispatch({ type: SELECTED_CATEGORY, data: "car" });
+              // router.push("/filteredByCategory");
+            }}
+          >
+            Car
+          </Button>
+        </Link>
+        <Link href="/filteredByCategory">
+          <Button
+            onClick={() => {
+              dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
+            }}
+          >
+            Clothes
+          </Button>
+        </Link>
+        <Link href="/filteredByCategory">
+          <Button
+            onClick={() => {
+              dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
+            }}
+          >
+            Electronics
+          </Button>
+        </Link>
+        <Link href="/filteredByCategory">
+          <Button
+            onClick={() => {
+              dispatch({ type: SELECTED_CATEGORY, data: "food" });
+            }}
+          >
+            Food
+          </Button>
+        </Link>
+        <Link href="/filteredByCategory">
+          <Button
+            onClick={() => {
+              dispatch({ type: SELECTED_CATEGORY, data: "garden" });
+            }}
+          >
+            Garden
+          </Button>
+        </Link>
       </Box>
       <br />
       <ProductList
