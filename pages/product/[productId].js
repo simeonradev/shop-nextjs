@@ -47,7 +47,6 @@ const ProductPage = (props) => {
   };
 
   if (productDataArray.length === 0) return <Box>Loading</Box>;
-  console.log(selectedProduct);
   return (
     <Box
       sx={{

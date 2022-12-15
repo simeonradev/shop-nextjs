@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   ADD_PRODUCT_TO_CART,
@@ -26,6 +26,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 import ShoppingCart from "./ShoppingCart";
 import Link from "./Link";
+import { ProductListColor } from "../pages/_app";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -119,6 +120,7 @@ const NavBar = () => {
     });
   }, [searchValue, selected, dispatch]);
 
+  const test = useContext(ProductListColor);
   return (
     <AppBar
       position="fixed"
@@ -245,6 +247,8 @@ const NavBar = () => {
                 TEST
               </Button>
             </Link>
+            <Button onClick={test.toggleColor}>change</Button>
+
             <Link href="/contacts">
               <Button variant="text" color="info">
                 Contact Us
