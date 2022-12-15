@@ -34,7 +34,7 @@ const ProductPage = (props) => {
   const handleAddToCart = () => {
     dispatch({
       type: ADD_PRODUCT_TO_CART,
-      data: props,
+      data: selectedProduct,
     });
   };
 

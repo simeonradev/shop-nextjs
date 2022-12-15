@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
+import { Box, Button, DialogContent, Typography } from "@mui/material";
 
 import ProductCard from "../components/ProductCard";
-import ProductPreviewModal from "./ProductPreviewModal";
-
-import { Box, Button } from "@mui/material";
-
+// import ProductPreviewModal from "./ProductPreviewModal";
+import { useModal } from "../components/useModal";
+import { ProductPreviewModal } from "../modals/ProductPreviewModal";
 import {
   ADD_PRODUCT_TO_CART,
   RECENTLY_VIEWED,
@@ -12,11 +12,9 @@ import {
   CLOSE_MODAL,
   MODAL,
 } from "../core/actions";
-import { useRouter } from "next/router";
 
 const ProductList = ({ products, ...rest }) => {
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const handleAddToCart = (product) => {
     dispatch({
@@ -31,50 +29,61 @@ const ProductList = ({ products, ...rest }) => {
     });
   };
 
+  const { showModal, hideModal } = useModal();
+
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       {...rest}
     >
-      {products.map((productDataFilteredBySearch) => {
+      {products.map((prodDataBySearch) => {
         return (
           <ProductCard
             withoutModal
             onClick={() => {
               dispatch({
                 type: RECENTLY_VIEWED,
-                data: productDataFilteredBySearch.id,
+                data: prodDataBySearch.id,
               });
-              router.push(`/product/${productDataFilteredBySearch.id}`);
             }}
-            key={productDataFilteredBySearch.id}
-            {...productDataFilteredBySearch}
+            key={prodDataBySearch.id}
+            {...prodDataBySearch}
             footerActions={
               <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                <Button
-                  onClick={() => handleAddToCart(productDataFilteredBySearch)}
-                >
+                <Button onClick={() => handleAddToCart(prodDataBySearch)}>
                   Add to Cart
                 </Button>
-                <Button
+
+                {/* <Button
                   onClick={() => {
                     dispatch({
                       type: OPEN_MODAL,
-                      data: productDataFilteredBySearch,
+                      data: prodDataBySearch,
                     });
                     dispatch({
                       type: MODAL,
                       data: (
-                        <>
-                          <ProductPreviewModal
-                            handleCloseModal={handleCloseModal}
-                            key={productDataFilteredBySearch.id}
-                            {...productDataFilteredBySearch}
-                          ></ProductPreviewModal>
-                        </>
+                        <ProductPreviewModal
+                          handleCloseModal={handleCloseModal}
+                          key={prodDataBySearch.id}
+                          {...prodDataBySearch}
+                        ></ProductPreviewModal>
                       ),
                     });
                   }}
+                >
+                  Preview Redux
+                </Button> */}
+
+                <Button
+                  onClick={() =>
+                    showModal(
+                      <ProductPreviewModal
+                        {...prodDataBySearch}
+                        hideModal={hideModal}
+                      />
+                    )
+                  }
                 >
                   Preview
                 </Button>

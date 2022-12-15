@@ -55,7 +55,6 @@ const Search = (props) => {
       })
     );
   }, [searchValue]);
-  console.log(filteredProducts);
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "50px" }}>

@@ -1,5 +1,8 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
+import { useContext } from "react";
+import { ProductListColor } from "../pages/_app";
+import Link from "./Link";
 
 const ImgBox = styled(Box)`
   border: 1px solid #00000080;
@@ -9,21 +12,30 @@ const ImgBox = styled(Box)`
   box-shadow: 0 0 10px #000000;
 `;
 
-const ProductCardBox = styled(Box)`
-  width: 200px;
-  margin-right: 10px;
-  margin-left: 10px;
-  background-color: #838383d5;
-  border-radius: 5px;
-  border: 2px solid #00000080;
-  box-shadow: 0 0 7px #00000080;
-`;
+const ProductCardBox = styled(Box, {
+  // Configure which props should be forwarded on DOM
+  shouldForwardProp: (prop) => prop !== "changeColor",
+})(({ changeColor }) => ({
+  width: "200px",
+  marginRight: "10px",
+  marginLeft: "10px",
+  backgroundColor: changeColor ? "#838383d5" : "#cf6f00",
+  borderRadius: "5px",
+  border: "2px solid #00000080",
+  boxShadow: "0 0 7px #00000080",
+}));
 
 const ProductCard = (props) => {
+  const test = useContext(ProductListColor);
+
   return (
     <Box>
-      <Box>
-        <ProductCardBox onClick={props.onClick}>
+      <Link href={`/product/${props.id}`}>
+        <ProductCardBox
+          changeColor={test.listColor}
+          onClick={props.onClick}
+          sx={{ cursor: "default" }}
+        >
           <Box sx={{ textAlign: "center" }}>
             {props.img === undefined ? (
               <ImgBox component="img" alt={props.id} src="/images/didi.jpg" />
@@ -43,8 +55,8 @@ const ProductCard = (props) => {
           <Typography>Rating: {props.rating}</Typography>
           <Typography>InStock: {JSON.stringify(props.inStock)}</Typography>
         </ProductCardBox>
-        {props.footerActions}
-      </Box>
+      </Link>
+      {props.footerActions}
     </Box>
   );
 };
