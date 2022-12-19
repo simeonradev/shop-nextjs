@@ -1,4 +1,4 @@
-const registeredUsers = [
+const registeredUsersArray = [
   {
     username: "yoman4o",
     password: "123",
@@ -128,4 +128,4 @@ const registeredUsers = [
   },
 ];
 
-export default registeredUsers;
+export default registeredUsersArray;

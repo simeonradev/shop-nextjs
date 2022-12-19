@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Box, Button, DialogContent, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 import ProductCard from "../components/ProductCard";
 // import ProductPreviewModal from "./ProductPreviewModal";
