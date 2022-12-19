@@ -2,7 +2,7 @@ import { Grid, Paper, TextField, Button, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { LOG_IN } from "../core/actions";
-import registeredUsers from "../components/registeredUsers";
+import registeredUsersArray from "../components/registeredUsersArray";
 import { useRouter } from "next/router";
 
 const LoginPage = () => {
@@ -13,7 +13,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const currentUser = registeredUsers.find(
+  const currentUser = registeredUsersArray.find(
     (user) => user.username === name && user.password === password
   );
 
