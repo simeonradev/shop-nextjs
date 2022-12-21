@@ -57,7 +57,7 @@ const Search = (props) => {
   }, [searchValue]);
   return (
     <Box>
-      <Box sx={{ display: "flex", pt: "50px" }}>
+      <Box sx={{ display: "flex", pt: "60px" }}>
         <SideNavBar data={filteredBySearch} onFilter={onFilter}></SideNavBar>
         {filteredProducts.length === 0 ? (
           <Typography variant="h4">

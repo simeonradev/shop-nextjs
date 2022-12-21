@@ -26,6 +26,8 @@ export const ProductPreviewModal = (props) => (
     <Typography>Location: {props.location}</Typography>
     <Typography>Rating: {props.rating}</Typography>
     <Typography>InStock: {JSON.stringify(props.inStock)}</Typography>
-    <Button onClick={props.hideModal}>close</Button>
+    <Button onClick={props.hideModal} color="secondary">
+      close
+    </Button>
   </DialogContent>
 );

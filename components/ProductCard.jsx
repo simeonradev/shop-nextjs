@@ -1,7 +1,7 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
 import { useContext } from "react";
-import { ProductListColor } from "../pages/_app";
+import { ColorModeContext } from "../pages/_app";
 import Link from "./Link";
 
 const ImgBox = styled(Box)`
@@ -19,20 +19,20 @@ const ProductCardBox = styled(Box, {
   width: "200px",
   marginRight: "10px",
   marginLeft: "10px",
-  backgroundColor: changeColor ? "#838383d5" : "#cf6f00",
+  backgroundColor: changeColor === "light" ? "#838383d5" : "#cf6f00",
   borderRadius: "5px",
   border: "2px solid #00000080",
   boxShadow: "0 0 7px #00000080",
 }));
 
 const ProductCard = (props) => {
-  const test = useContext(ProductListColor);
+  const colorMode = useContext(ColorModeContext);
 
   return (
     <Box>
       <Link href={`/product/${props.id}`}>
         <ProductCardBox
-          changeColor={test.listColor}
+          changeColor={colorMode.mode}
           onClick={props.onClick}
           sx={{ cursor: "default" }}
         >

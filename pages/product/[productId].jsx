@@ -56,7 +56,7 @@ const ProductPage = (props) => {
         justifyContent: "space-between",
       }}
     >
-      <Typography variant="h3" sx={{ pt: "50px", textAlign: "center" }}>
+      <Typography variant="h3" sx={{ pt: "60px", textAlign: "center" }}>
         {selectedProduct.name}
       </Typography>
       <Box
@@ -83,7 +83,9 @@ const ProductPage = (props) => {
           <Typography>
             InStock: {JSON.stringify(selectedProduct.inStock)}
           </Typography>
-          <Button onClick={() => handleAddToCart()}>Add to Cart</Button>
+          <Button onClick={() => handleAddToCart()} color="secondary">
+            Add to Cart
+          </Button>
         </Box>
       </Box>
       <Box>

@@ -50,7 +50,10 @@ const ProductList = ({ products, ...rest }) => {
             {...prodDataBySearch}
             footerActions={
               <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                <Button onClick={() => handleAddToCart(prodDataBySearch)}>
+                <Button
+                  onClick={() => handleAddToCart(prodDataBySearch)}
+                  color={"secondary"}
+                >
                   Add to Cart
                 </Button>
 
@@ -84,6 +87,7 @@ const ProductList = ({ products, ...rest }) => {
                       />
                     )
                   }
+                  color="secondary"
                 >
                   Preview
                 </Button>

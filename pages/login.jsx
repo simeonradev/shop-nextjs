@@ -30,7 +30,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Grid sx={{ display: "flex", pt: "50px" }}>
+    <Grid sx={{ display: "flex", pt: "60px" }}>
       <Paper
         elevation={10}
         sx={{
@@ -63,7 +63,7 @@ const LoginPage = () => {
         </Typography>
         <Button
           type="submit"
-          color="primary"
+          color="secondary"
           variant="contained"
           sx={{ margin: "10px 0" }}
           fullWidth

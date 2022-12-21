@@ -24,9 +24,9 @@ import { Stack } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
+import ThemeButton from "./themeButton";
 import ShoppingCart from "./ShoppingCart";
 import Link from "./Link";
-import { ProductListColor } from "../pages/_app";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -120,11 +120,14 @@ const NavBar = () => {
     });
   }, [searchValue, selected, dispatch]);
 
-  const test = useContext(ProductListColor);
   return (
     <AppBar
       position="fixed"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: "#cf6f00" }}
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        bgcolor: "#cf6f00",
+        backgroundImage: "none",
+      }}
     >
       <Box
         sx={{
@@ -247,12 +250,10 @@ const NavBar = () => {
                 TEST
               </Button>
             </Link>
-            <Button onClick={test.toggleColor}>change</Button>
+            {/* <Button onClick={test.toggleColor}>change</Button> */}
 
             <Link href="/contacts">
-              <Button variant="text" color="info">
-                Contact Us
-              </Button>
+              <Button variant="text">Contact Us</Button>
             </Link>
           </Stack>
           <Button
@@ -269,6 +270,7 @@ const NavBar = () => {
               "& .MuiDrawer-paper": {
                 width: "400px",
                 backgroundColor: "#cf6f00",
+                backgroundImage: "none",
               },
             }}
             anchor="right"
@@ -324,6 +326,8 @@ const NavBar = () => {
               <Button>Login</Button>
             </Link>
           )}
+
+          <ThemeButton />
         </Box>
       </Box>
     </AppBar>

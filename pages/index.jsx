@@ -110,6 +110,7 @@ const HomePage = () => {
               dispatch({ type: SELECTED_CATEGORY, data: "car" });
               // router.push("/filteredByCategory");
             }}
+            color="secondary"
           >
             Car
           </Button>
@@ -119,6 +120,7 @@ const HomePage = () => {
             onClick={() => {
               dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
             }}
+            color="secondary"
           >
             Clothes
           </Button>
@@ -128,6 +130,7 @@ const HomePage = () => {
             onClick={() => {
               dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
             }}
+            color="secondary"
           >
             Electronics
           </Button>
@@ -137,6 +140,7 @@ const HomePage = () => {
             onClick={() => {
               dispatch({ type: SELECTED_CATEGORY, data: "food" });
             }}
+            color="secondary"
           >
             Food
           </Button>
@@ -146,6 +150,7 @@ const HomePage = () => {
             onClick={() => {
               dispatch({ type: SELECTED_CATEGORY, data: "garden" });
             }}
+            color="secondary"
           >
             Garden
           </Button>
