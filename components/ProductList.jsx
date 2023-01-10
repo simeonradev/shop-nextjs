@@ -1,21 +1,21 @@
-import { useDispatch } from "react-redux";
-import { Box, Button } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, Button, IconButton } from "@mui/material";
 
 import ProductCard from "../components/ProductCard";
-// import ProductPreviewModal from "./ProductPreviewModal";
 import { useModal } from "../components/useModal";
 import { ProductPreviewModal } from "../modals/ProductPreviewModal";
 import {
   ADD_PRODUCT_TO_CART,
   RECENTLY_VIEWED,
-  OPEN_MODAL,
-  CLOSE_MODAL,
-  MODAL,
+  ADD_TO_LIKED,
+  REMOVE_FROM_LIKED,
 } from "../core/actions";
+
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const ProductList = ({ products, ...rest }) => {
   const dispatch = useDispatch();
-
   const handleAddToCart = (product) => {
     dispatch({
       type: ADD_PRODUCT_TO_CART,
@@ -23,13 +23,11 @@ const ProductList = ({ products, ...rest }) => {
     });
   };
 
-  const handleCloseModal = () => {
-    dispatch({
-      type: CLOSE_MODAL,
-    });
-  };
-
   const { showModal, hideModal } = useModal();
+
+  const likedProducts = useSelector((state) => {
+    return state.likedProducts;
+  });
 
   return (
     <Box
@@ -57,27 +55,6 @@ const ProductList = ({ products, ...rest }) => {
                   Add to Cart
                 </Button>
 
-                {/* <Button
-                  onClick={() => {
-                    dispatch({
-                      type: OPEN_MODAL,
-                      data: prodDataBySearch,
-                    });
-                    dispatch({
-                      type: MODAL,
-                      data: (
-                        <ProductPreviewModal
-                          handleCloseModal={handleCloseModal}
-                          key={prodDataBySearch.id}
-                          {...prodDataBySearch}
-                        ></ProductPreviewModal>
-                      ),
-                    });
-                  }}
-                >
-                  Preview Redux
-                </Button> */}
-
                 <Button
                   onClick={() =>
                     showModal(
@@ -91,6 +68,34 @@ const ProductList = ({ products, ...rest }) => {
                 >
                   Preview
                 </Button>
+
+                {likedProducts.find(
+                  (productId) => productId === prodDataBySearch.id
+                ) ? (
+                  <IconButton
+                    onClick={() => {
+                      dispatch({
+                        type: REMOVE_FROM_LIKED,
+                        data: prodDataBySearch.id,
+                      });
+                    }}
+                    color={"secondary"}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    onClick={() => {
+                      dispatch({
+                        type: ADD_TO_LIKED,
+                        data: prodDataBySearch.id,
+                      });
+                    }}
+                    color={"secondary"}
+                  >
+                    <FavoriteBorderIcon />
+                  </IconButton>
+                )}
               </Box>
             }
           ></ProductCard>

@@ -10,6 +10,7 @@ import { currentUser } from "./currentUser";
 import { recentlyViewed } from "./recentlyViewed";
 import { modal } from "./modal";
 import { counter } from "./counter";
+import { likedProducts } from "./likedProducts";
 
 // COMBINED REDUCERS
 const combinedReducers = {
@@ -21,6 +22,7 @@ const combinedReducers = {
   searchTerm,
   selectedCategory,
   counter,
+  likedProducts,
 };
 
 export default combineReducers(combinedReducers);

@@ -1,8 +1,15 @@
 import { Box, Button, Typography } from "@mui/material";
 
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import { ADD_PRODUCT_TO_CART } from "../../core/actions";
+import {
+  ADD_PRODUCT_TO_CART,
+  ADD_TO_LIKED,
+  REMOVE_FROM_LIKED,
+} from "../../core/actions";
 
 import { useRouter } from "next/router";
 
@@ -13,7 +20,7 @@ const style = {
   flexDirection: "row",
   flexWrap: "nowrap",
   justifyContent: "flex-start",
-  height: "300px",
+  height: "310px",
   overflowX: "scroll",
 };
 
@@ -25,6 +32,10 @@ const ProductPage = (props) => {
 
   const productDataArray = useSelector((state) => {
     return state.productData;
+  });
+
+  const likedProducts = useSelector((state) => {
+    return state.likedProducts;
   });
 
   const selectedProduct = productDataArray.find((product) => {
@@ -86,6 +97,37 @@ const ProductPage = (props) => {
           <Button onClick={() => handleAddToCart()} color="secondary">
             Add to Cart
           </Button>
+          <br></br>
+
+          {likedProducts.find(
+            (productId) => productId === selectedProduct.id
+          ) ? (
+            <Button
+              onClick={() => {
+                dispatch({
+                  type: REMOVE_FROM_LIKED,
+                  data: selectedProduct.id,
+                });
+              }}
+              color={"secondary"}
+            >
+              Liked
+              <FavoriteIcon />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                dispatch({
+                  type: ADD_TO_LIKED,
+                  data: selectedProduct.id,
+                });
+              }}
+              color={"secondary"}
+            >
+              Like
+              <FavoriteBorderIcon />
+            </Button>
+          )}
         </Box>
       </Box>
       <Box>

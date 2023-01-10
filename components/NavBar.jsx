@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   ADD_PRODUCT_TO_CART,
@@ -24,9 +24,11 @@ import { Stack } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
-import ThemeButton from "./themeButton";
 import ShoppingCart from "./ShoppingCart";
 import Link from "./Link";
+import { useMUITheme } from "./useMUITheme";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -119,6 +121,8 @@ const NavBar = () => {
       data: searchValue || selected,
     });
   }, [searchValue, selected, dispatch]);
+
+  const { theme, toggleColorMode } = useMUITheme();
 
   return (
     <AppBar
@@ -283,7 +287,6 @@ const NavBar = () => {
               removeFromCart={handleRemoveFromCart}
             />
           </Drawer>
-
           {isLogedIn === true ? (
             <Box sx={{ display: "flex" }}>
               <Button
@@ -327,7 +330,13 @@ const NavBar = () => {
             </Link>
           )}
 
-          <ThemeButton />
+          <IconButton onClick={toggleColorMode}>
+            {theme.palette.theme === "light" ? (
+              <Brightness4Icon style={{ color: "black" }} />
+            ) : (
+              <Brightness7Icon style={{ color: "white" }} />
+            )}
+          </IconButton>
         </Box>
       </Box>
     </AppBar>
