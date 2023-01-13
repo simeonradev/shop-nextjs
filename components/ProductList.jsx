@@ -29,6 +29,19 @@ const ProductList = ({ products, ...rest }) => {
     return state.likedProducts;
   });
 
+  const addProductToLiked = async (event, prodDataBySearchId) => {
+    event.preventDefault();
+    const res = await fetch("/api/likedProducts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: prodDataBySearchId }),
+    });
+    if (res.ok) {
+      const likedProductsIds = await res.json();
+      console.log("Liked Products Ids:", likedProductsIds);
+    }
+  };
+
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
@@ -96,6 +109,13 @@ const ProductList = ({ products, ...rest }) => {
                     <FavoriteBorderIcon />
                   </IconButton>
                 )}
+                <Button
+                  onClick={(event) =>
+                    addProductToLiked(event, prodDataBySearch.id)
+                  }
+                >
+                  Test
+                </Button>
               </Box>
             }
           ></ProductCard>
