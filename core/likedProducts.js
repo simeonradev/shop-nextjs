@@ -1,15 +1,22 @@
-import { ADD_TO_LIKED, REMOVE_FROM_LIKED } from "./actions";
+import {
+  UPDATE_LIKED_PRODUCTS_LOADED,
+  GET_LIKED_PRODUCTS_LOADED,
+  DELETE_LIKED_PRODUCT_LOADED,
+} from "./actions";
 
 const initialState = [];
 
 export const likedProducts = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_TO_LIKED:
+    case UPDATE_LIKED_PRODUCTS_LOADED:
       const isProductLiked = state.find((itemId) => itemId === action.data);
 
       return isProductLiked ? state : [...state, action.data];
 
-    case REMOVE_FROM_LIKED:
+    case GET_LIKED_PRODUCTS_LOADED:
+      return action.data ? action.data : state;
+
+    case DELETE_LIKED_PRODUCT_LOADED:
       return state.filter((item) => item !== action.data);
 
     default:

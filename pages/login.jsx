@@ -1,33 +1,40 @@
 import { Grid, Paper, TextField, Button, Box, Typography } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { LOG_IN } from "../core/actions";
-import registeredUsersArray from "../components/registeredUsersArray";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
+import { GET_USER, CLEAR_ERROR } from "../core/actions";
+
 const LoginPage = () => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const currentUser = registeredUsersArray.find(
-    (user) => user.username === name && user.password === password
-  );
+  const currentUser = useSelector((state) => {
+    return state.user;
+  });
 
   const handleLogIn = () => {
-    if (currentUser) {
-      dispatch({
-        type: LOG_IN,
-        data: currentUser,
-      });
-      router.push("/profile");
-    } else {
-      setError("Wrong username or password");
-    }
+    dispatch({
+      type: GET_USER,
+      data: { username: username, password: password },
+    });
   };
+
+  const handleCreateAccount = () => {
+    dispatch({
+      type: CLEAR_ERROR,
+    });
+    router.push("/createAccount");
+  };
+
+  useEffect(() => {
+    if (currentUser._id) {
+      router.push("/profile");
+    }
+  }, [currentUser]);
 
   return (
     <Grid sx={{ display: "flex", pt: "60px" }}>
@@ -47,8 +54,8 @@ const LoginPage = () => {
           placeholder="Enter username"
           fullWidth
           sx={{ margin: "10px 0" }}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
           label="Password"
@@ -59,7 +66,7 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Typography align="center" sx={{ color: "error.main" }}>
-          {error}
+          {currentUser.error}
         </Typography>
         <Button
           type="submit"
@@ -67,9 +74,20 @@ const LoginPage = () => {
           variant="contained"
           sx={{ margin: "10px 0" }}
           fullWidth
+          disabled={currentUser.loading}
           onClick={handleLogIn}
         >
           Log in
+        </Button>
+        <Button
+          type="submit"
+          color="secondary"
+          variant="contained"
+          fullWidth
+          disabled={currentUser.loading}
+          onClick={handleCreateAccount}
+        >
+          Create Account
         </Button>
       </Paper>
     </Grid>

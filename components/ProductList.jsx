@@ -7,12 +7,14 @@ import { ProductPreviewModal } from "../modals/ProductPreviewModal";
 import {
   ADD_PRODUCT_TO_CART,
   RECENTLY_VIEWED,
-  ADD_TO_LIKED,
-  REMOVE_FROM_LIKED,
+  DELETE_LIKED_PRODUCT,
+  UPDATE_LIKED_PRODUCTS,
+  GET_LIKED_PRODUCTS,
 } from "../core/actions";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useEffect } from "react";
 
 const ProductList = ({ products, ...rest }) => {
   const dispatch = useDispatch();
@@ -29,18 +31,11 @@ const ProductList = ({ products, ...rest }) => {
     return state.likedProducts;
   });
 
-  const addProductToLiked = async (event, prodDataBySearchId) => {
-    event.preventDefault();
-    const res = await fetch("/api/likedProducts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: prodDataBySearchId }),
+  useEffect(() => {
+    dispatch({
+      type: GET_LIKED_PRODUCTS,
     });
-    if (res.ok) {
-      const likedProductsIds = await res.json();
-      console.log("Liked Products Ids:", likedProductsIds);
-    }
-  };
+  }, []);
 
   return (
     <Box
@@ -88,7 +83,7 @@ const ProductList = ({ products, ...rest }) => {
                   <IconButton
                     onClick={() => {
                       dispatch({
-                        type: REMOVE_FROM_LIKED,
+                        type: DELETE_LIKED_PRODUCT,
                         data: prodDataBySearch.id,
                       });
                     }}
@@ -100,7 +95,7 @@ const ProductList = ({ products, ...rest }) => {
                   <IconButton
                     onClick={() => {
                       dispatch({
-                        type: ADD_TO_LIKED,
+                        type: UPDATE_LIKED_PRODUCTS,
                         data: prodDataBySearch.id,
                       });
                     }}
@@ -109,13 +104,6 @@ const ProductList = ({ products, ...rest }) => {
                     <FavoriteBorderIcon />
                   </IconButton>
                 )}
-                <Button
-                  onClick={(event) =>
-                    addProductToLiked(event, prodDataBySearch.id)
-                  }
-                >
-                  Test
-                </Button>
               </Box>
             }
           ></ProductCard>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+
 import {
   ADD_PRODUCT_TO_CART,
   REMOVE_PRODUCT_FROM_CART,
@@ -88,12 +90,12 @@ const NavBar = () => {
     return state.productCart.productCartArray;
   });
 
-  const isLogedIn = useSelector((state) => {
-    return state.currentUser.isLoggedIn;
-  });
+  // const isLogedIn = useSelector((state) => {
+  //   return state.currentUser.isLoggedIn;
+  // });
 
   const currentUser = useSelector((state) => {
-    return state.currentUser.loggedInUser;
+    return state.user;
   });
 
   const productDataArray = useSelector((state) => {
@@ -108,11 +110,14 @@ const NavBar = () => {
 
   const testArray = productDataArray.map((test) => test.name);
 
+  const router = useRouter();
+
   const handleLogOut = () => {
     handleCloseProfileMenu();
     dispatch({
       type: LOG_OUT,
     });
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -287,7 +292,7 @@ const NavBar = () => {
               removeFromCart={handleRemoveFromCart}
             />
           </Drawer>
-          {isLogedIn === true ? (
+          {currentUser._id ? (
             <Box sx={{ display: "flex" }}>
               <Button
                 id="profile-button"

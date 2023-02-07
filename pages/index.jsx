@@ -2,12 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button } from "@mui/material";
 
-import {
-  SELECTED_CATEGORY,
-  GET_PRODUCT_DATA_ARRAY,
-  INCREMENT,
-  DECREMENT,
-} from "../core/actions";
+import { SELECTED_CATEGORY, GET_PRODUCT_DATA_ARRAY } from "../core/actions";
 
 import ProductList from "../components/ProductList";
 import productDataArray from "../components/productDataArray";
@@ -25,38 +20,6 @@ const style = {
 const HomePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-
-  ///////////////////////// Use backend data ///////////////////////////////
-  // useEffect(() => {
-  //   async function getResponse() {
-  //     try {
-  //       const response = await fetch("http://localhost:3001/products", {
-  //         method: "GET",
-  //       });
-
-  //       const actualData = await response.json();
-
-  //       dispatch({
-  //         type: GET_PRODUCT_DATA_ARRAY,
-  //         data: actualData,
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   getResponse();
-  // }, []);
-
-  // const globalModal = useSelector((state) => {
-  //   return state.modal.modal;
-  // });
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: GET_PRODUCT_DATA_ARRAY,
-  //     data: productDataArray,
-  //   });
-  // }, [dispatch]);
 
   const productDataArrayFromReducer = useSelector((state) => {
     return state.productData;
@@ -77,30 +40,8 @@ const HomePage = () => {
     });
   }, [dispatch]);
 
-  const count = useSelector((state) => {
-    return state.counter.count;
-  });
-
   return (
     <Box sx={{ pt: "60px" }}>
-      {/* {count}
-      <Box>
-        <Button
-          onClick={() => {
-            dispatch({ type: INCREMENT });
-          }}
-        >
-          +
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: DECREMENT });
-          }}
-        >
-          -
-        </Button>
-      </Box> */}
-
       <br />
       <Box>
         Categories:
