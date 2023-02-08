@@ -8,7 +8,6 @@ import ProductList from "../components/ProductList";
 import productDataArray from "../components/productDataArray";
 import { useRouter } from "next/router";
 import Link from "../components/Link";
-import { useSession, signIn, signOut } from "next-auth/react";
 
 const style = {
   display: "flex",
@@ -21,7 +20,6 @@ const style = {
 const HomePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  log;
   const productDataArrayFromReducer = useSelector((state) => {
     return state.productData;
   });
@@ -43,8 +41,6 @@ const HomePage = () => {
 
   return (
     <Box sx={{ pt: "60px" }}>
-      <button onClick={() => signIn()}>Sign in</button>
-
       <br />
       <Box>
         Categories:
