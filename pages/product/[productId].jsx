@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   ADD_PRODUCT_TO_CART,
-  ADD_TO_LIKED,
-  REMOVE_FROM_LIKED,
+  DELETE_LIKED_PRODUCT,
+  UPDATE_LIKED_PRODUCTS,
 } from "../../core/actions";
 
 import { useRouter } from "next/router";
@@ -105,7 +105,7 @@ const ProductPage = (props) => {
             <Button
               onClick={() => {
                 dispatch({
-                  type: REMOVE_FROM_LIKED,
+                  type: DELETE_LIKED_PRODUCT,
                   data: selectedProduct.id,
                 });
               }}
@@ -118,7 +118,7 @@ const ProductPage = (props) => {
             <Button
               onClick={() => {
                 dispatch({
-                  type: ADD_TO_LIKED,
+                  type: UPDATE_LIKED_PRODUCTS,
                   data: selectedProduct.id,
                 });
               }}
