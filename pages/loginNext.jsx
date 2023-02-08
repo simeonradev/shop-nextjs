@@ -1,9 +1,8 @@
 import { Grid, Paper, TextField, Button, Box, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
-import { GET_USER, CLEAR_ERROR } from "../core/actions";
 import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
