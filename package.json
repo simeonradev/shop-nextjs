@@ -29,12 +29,12 @@
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.4",
     "redux": "^4.2.0",
-    "redux-devtools-extension": "^2.13.9",
     "redux-saga": "^1.2.2",
     "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
     "eslint": "8.26.0",
-    "eslint-config-next": "13.0.0"
+    "eslint-config-next": "13.0.0",
+    "redux-devtools-extension": "^2.13.9"
   }
 }
