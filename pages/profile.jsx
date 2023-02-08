@@ -5,10 +5,14 @@ import { DELETE_USER } from "../core/actions";
 import { useEffect, useState } from "react";
 
 import { UPDATE_USER } from "../core/actions";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const MyProfile = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  console.log(session);
 
   const currentUser = useSelector((state) => {
     return state.user;
@@ -37,14 +41,17 @@ const MyProfile = () => {
     });
   };
 
-  useEffect(() => {
-    if (!currentUser._id) {
-      router.push("/login");
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (!currentUser._id) {
+  //     router.push("/login");
+  //   }
+  // }, [currentUser]);
 
   return (
     <Grid sx={{ display: "flex", pt: "100px", pl: "20px" }}>
+      <button onClick={() => signOut()}>Sign out</button>
+      <button onClick={() => signIn()}>Sign in</button>
+
       {currentUser._id ? (
         <Paper
           elevation={10}

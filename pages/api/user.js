@@ -16,15 +16,14 @@ export default async function handler(req, res) {
     if (userExists) {
       res.status(409).json();
     } else {
-      await db
-        .collection("users")
-        .insertOne({
-          username: user.username,
-          password: user.password,
-          name: user.name,
-          age: user.age,
-          describtion: user.describtion,
-        });
+      await db.collection("users").insertOne({
+        username: user.username,
+        password: user.password,
+        name: user.name,
+        age: user.age,
+        describtion: user.describtion,
+      });
+
       const newUser = await db
         .collection("users")
         .findOne({ username: user.username });
