@@ -72,7 +72,7 @@ export default NextAuth({
   ],
   secret: "didko",
   pages: {
-    signIn: "/loginNext",
+    signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user, account }) {

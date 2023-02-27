@@ -16,6 +16,7 @@ const MyApp = ({
   const { store } = wrapper.useWrappedStore(rest);
   const router = useRouter();
   console.log(router.asPath, router.query);
+
   return (
     <Provider store={store}>
       <SessionProvider session={session}>

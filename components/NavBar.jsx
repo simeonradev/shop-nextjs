@@ -315,7 +315,7 @@ const NavBar = () => {
               </Menu>
             </Box>
           ) : (
-            <Link href="/loginNext">
+            <Link href="/login">
               <Button>Login</Button>
             </Link>
           )}
