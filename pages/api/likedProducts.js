@@ -25,7 +25,6 @@ export default async function handler(req, res) {
       .findOne({ _id: "user1" });
     // .toArray();
     res.status(200).json({ likedProductsIds: allPosts.productIds });
-    // console.log(allPosts);
   } else if (req.method === "DELETE") {
     const { id } = req.body;
     const newLikedProductsIds = likedProductsIds.filter(

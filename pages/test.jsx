@@ -280,12 +280,6 @@ const arr2 = ["a", "b", "c", "d", "e", "f"];
 const firstTwo = arr2.slice(0, 2);
 const rest = arr2.slice(2);
 
-// const myFunc = ([x, y, ...params]) => {
-//   console.log([x, y]);
-//   console.log(params);
-// };
-// myFunc(arr2);
-
 const firstTwo2 = ([a, b, ...rest]) => {
   return [a, b];
 };
@@ -297,8 +291,6 @@ const rest2 = ([a, b, ...rest]) => {
 const [a, b, ...rest1] = arr2;
 
 const firstTwo3 = [a, b];
-
-// console.log(firstTwo3, rest1);
 
 const Test = () => {
   return (

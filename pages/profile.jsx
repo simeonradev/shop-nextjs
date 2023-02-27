@@ -1,58 +1,40 @@
 import { Box, Typography, Button, TextField, Paper, Grid } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
-import { DELETE_USER } from "../core/actions";
-import { useEffect, useState } from "react";
-
-import { UPDATE_USER } from "../core/actions";
 import { useSession, signIn, signOut } from "next-auth/react";
 
+import { useForm } from "react-hook-form";
+
 const MyProfile = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
   const { data: session } = useSession();
+  const { register, handleSubmit, getValues } = useForm();
 
   console.log(session);
+  console.log(getValues());
 
-  const currentUser = useSelector((state) => {
-    return state.user;
-  });
-
-  const [name, setName] = useState(currentUser.name);
-  const [age, setAge] = useState(currentUser.age);
-  const [describtion, setDescribtion] = useState(currentUser.describtion);
-
-  const changeUserDetails = () => {
-    dispatch({
-      type: UPDATE_USER,
-      data: {
-        username: currentUser.username,
-        name: name,
-        age: age,
-        describtion: describtion,
-      },
+  const updateUserDetails = async (userDetails) => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: session.user.username,
+      action: "updateUser",
+      ...userDetails,
     });
+    console.log(userDetails);
   };
 
-  const handleDelete = () => {
-    dispatch({
-      type: DELETE_USER,
-      data: currentUser,
+  const handleDeleteUser = async () => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: session.user.username,
+      action: "deleteUser",
     });
-  };
 
-  // useEffect(() => {
-  //   if (!currentUser._id) {
-  //     router.push("/login");
-  //   }
-  // }, [currentUser]);
+    if (res.status === 200) {
+      signOut();
+    }
+  };
 
   return (
     <Grid sx={{ display: "flex", pt: "100px", pl: "20px" }}>
-      <button onClick={() => signOut()}>Sign out</button>
-      <button onClick={() => signIn()}>Sign in</button>
-
-      {currentUser._id ? (
+      {session ? (
         <Paper
           elevation={10}
           sx={{
@@ -65,50 +47,50 @@ const MyProfile = () => {
             <Box align="center">
               <Typography variant="h5">Profile Page</Typography>
             </Box>
-            <TextField
-              sx={{ margin: "5px 0" }}
-              label="Username"
-              defaultValue={currentUser.username}
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              sx={{ margin: "5px 0" }}
-              label="Name"
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value)}
-            />
 
-            <TextField
-              sx={{ margin: "5px 0" }}
-              label="Age"
-              defaultValue={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
+            <form onSubmit={handleSubmit(updateUserDetails)}>
+              <TextField
+                sx={{ margin: "5px 0" }}
+                label="Username"
+                defaultValue={session.user.username}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                sx={{ margin: "5px 0" }}
+                label="Name"
+                defaultValue={session.user.name}
+                {...register("name")}
+              />
 
-            <TextField
-              sx={{ margin: "5px 0" }}
-              label="Description"
-              defaultValue={describtion}
-              onChange={(e) => setDescribtion(e.target.value)}
-            />
+              <TextField
+                sx={{ margin: "5px 0" }}
+                label="Age"
+                defaultValue={session.user.age}
+                {...register("age")}
+              />
+              <TextField
+                sx={{ margin: "5px 0" }}
+                label="Describtion"
+                defaultValue={session.user.describtion}
+                {...register("describtion")}
+              />
+              <Box>
+                <Button type="submit">Apply</Button>
+              </Box>
 
-            <Button disabled={currentUser.loading} onClick={changeUserDetails}>
-              Apply
-            </Button>
-
-            <Button
-              type="submit"
-              color="secondary"
-              variant="contained"
-              sx={{ margin: "10px 0" }}
-              fullWidth
-              disabled={currentUser.loading}
-              onClick={handleDelete}
-            >
-              Delete User
-            </Button>
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                sx={{ margin: "10px 0" }}
+                fullWidth
+                onClick={handleDeleteUser}
+              >
+                Delete User
+              </Button>
+            </form>
           </Box>
         </Paper>
       ) : (

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/router";
 
 import {
   ADD_PRODUCT_TO_CART,
   REMOVE_PRODUCT_FROM_CART,
   SELECTED_CATEGORY,
   SEARCH_TERM,
-  LOG_OUT,
 } from "../core/actions";
 
 import {
@@ -31,6 +29,8 @@ import Link from "./Link";
 import { useMUITheme } from "./useMUITheme";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+
+import { useSession, signOut } from "next-auth/react";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -90,14 +90,6 @@ const NavBar = () => {
     return state.productCart.productCartArray;
   });
 
-  // const isLogedIn = useSelector((state) => {
-  //   return state.currentUser.isLoggedIn;
-  // });
-
-  const currentUser = useSelector((state) => {
-    return state.user;
-  });
-
   const productDataArray = useSelector((state) => {
     return state.productData;
   });
@@ -110,16 +102,6 @@ const NavBar = () => {
 
   const testArray = productDataArray.map((test) => test.name);
 
-  const router = useRouter();
-
-  const handleLogOut = () => {
-    handleCloseProfileMenu();
-    dispatch({
-      type: LOG_OUT,
-    });
-    router.push("/login");
-  };
-
   useEffect(() => {
     dispatch({
       type: SEARCH_TERM,
@@ -128,6 +110,8 @@ const NavBar = () => {
   }, [searchValue, selected, dispatch]);
 
   const { theme, toggleColorMode } = useMUITheme();
+
+  const { data: session } = useSession();
 
   return (
     <AppBar
@@ -292,7 +276,7 @@ const NavBar = () => {
               removeFromCart={handleRemoveFromCart}
             />
           </Drawer>
-          {currentUser._id ? (
+          {session ? (
             <Box sx={{ display: "flex" }}>
               <Button
                 id="profile-button"
@@ -301,7 +285,8 @@ const NavBar = () => {
                 aria-expanded={openProfileMenu ? "true" : undefined}
                 onClick={handleClickProfileMenu}
               >
-                <Box
+                Profile
+                {/* <Box
                   component="img"
                   style={{
                     borderRadius: "10px",
@@ -309,7 +294,7 @@ const NavBar = () => {
                   }}
                   alt={"Profile logo"}
                   src={currentUser === "" ? null : currentUser.img}
-                />
+                /> */}
               </Button>
 
               <Menu
@@ -326,11 +311,11 @@ const NavBar = () => {
                     My Profile
                   </MenuItem>
                 </Link>
-                <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+                <MenuItem onClick={signOut}>Logout</MenuItem>
               </Menu>
             </Box>
           ) : (
-            <Link href="/login">
+            <Link href="/loginNext">
               <Button>Login</Button>
             </Link>
           )}

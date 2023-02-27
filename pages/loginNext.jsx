@@ -1,6 +1,5 @@
 import { Grid, Paper, TextField, Button, Box, Typography } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 import { signIn } from "next-auth/react";
@@ -10,7 +9,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleCreateAccount = async () => {
@@ -18,6 +16,8 @@ const LoginPage = () => {
       redirect: false,
       username: username,
       password: password,
+      action: "createUser",
+
       callbackUrl: `${window.location.origin}/profile`,
     });
     console.log(res);
@@ -30,7 +30,26 @@ const LoginPage = () => {
     if (res.url) router.push(res.url);
   };
 
-  console.log(router.query.callbackUrl);
+  const handleLogin = async () => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: username,
+      password: password,
+      action: "loginUser",
+
+      callbackUrl: `${window.location.origin}/profile`,
+    });
+    console.log(res);
+
+    if (res?.error) {
+      setError("Wrong username/password");
+    } else {
+      setError(null);
+    }
+    if (res.url) router.push(res.url);
+  };
+
+  // console.log(router.query.callbackUrl);
   return (
     <Grid sx={{ display: "flex", pt: "60px" }}>
       <Paper
@@ -67,10 +86,20 @@ const LoginPage = () => {
           type="submit"
           color="secondary"
           variant="contained"
+          sx={{ margin: "10px 0" }}
+          fullWidth
+          onClick={handleLogin}
+        >
+          Login Next
+        </Button>
+        <Button
+          type="submit"
+          color="secondary"
+          variant="contained"
           fullWidth
           onClick={handleCreateAccount}
         >
-          Create Account
+          Create Next
         </Button>
       </Paper>
     </Grid>
