@@ -18,7 +18,7 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log(credentials, "credentials");
+        // console.log(credentials, "credentials");
 
         const client = await clientPromise;
         const db = client.db("didi-shop-db");
@@ -26,7 +26,7 @@ export default NextAuth({
         const userExists = await db
           .collection("users")
           .findOne({ username: credentials.username });
-        console.log(userExists, "asd");
+        // console.log(userExists, "asd");
         if (credentials.action === "loginUser") {
           if (userExists) {
             return userExists;
@@ -53,7 +53,7 @@ export default NextAuth({
               }
             );
 
-            console.log(credentials, "credentials");
+            // console.log(credentials, "credentials");
             const updatedUser = await db
               .collection("users")
               .findOne({ username: credentials.username });
@@ -101,7 +101,7 @@ export default NextAuth({
       session.user.age = token.age;
       session.user.describtion = token.describtion;
 
-      console.log(session, "session");
+      // console.log(session, "session");
 
       return session;
     },

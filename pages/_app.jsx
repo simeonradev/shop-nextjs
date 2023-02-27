@@ -7,6 +7,7 @@ import { GlobalTheme } from "../components/useMUITheme";
 import NavBar from "../components/NavBar";
 import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/router";
+import { ProtectRoute } from "../components/authContext";
 
 const MyApp = ({
   Component,
@@ -14,17 +15,19 @@ const MyApp = ({
   ...rest
 }) => {
   const { store } = wrapper.useWrappedStore(rest);
-  const router = useRouter();
-  console.log(router.asPath, router.query);
+  // const router = useRouter();
+  // console.log(router.asPath, router.query);
 
   return (
     <Provider store={store}>
       <SessionProvider session={session}>
         <GlobalTheme>
           <GlobalModal>
-            <NavBar />
+            <ProtectRoute>
+              <NavBar />
 
-            <Component {...pageProps} />
+              <Component {...pageProps} />
+            </ProtectRoute>
           </GlobalModal>
         </GlobalTheme>
       </SessionProvider>

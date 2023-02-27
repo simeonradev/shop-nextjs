@@ -8,7 +8,7 @@ const MyProfile = () => {
   const { register, handleSubmit, getValues } = useForm();
 
   console.log(session);
-  console.log(getValues());
+  // console.log(getValues());
 
   const updateUserDetails = async (userDetails) => {
     const res = await signIn("credentials", {
@@ -17,7 +17,6 @@ const MyProfile = () => {
       action: "updateUser",
       ...userDetails,
     });
-    console.log(userDetails);
   };
 
   const handleDeleteUser = async () => {
