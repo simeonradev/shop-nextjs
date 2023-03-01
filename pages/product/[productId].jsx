@@ -24,7 +24,7 @@ const style = {
   overflowX: "scroll",
 };
 
-const ProductPage = (props) => {
+const ProductPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
