@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 
 const MyProfile = () => {
   const { data: session } = useSession();
-  const { register, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit } = useForm();
 
   console.log(session);
   // console.log(getValues());
 
   const updateUserDetails = async (userDetails) => {
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       redirect: false,
       username: session.user.username,
       action: "updateUser",

@@ -17,7 +17,7 @@ export default NextAuth({
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // console.log(credentials, "credentials");
 
         const client = await clientPromise;

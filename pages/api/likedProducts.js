@@ -10,11 +10,11 @@ export default async function handler(req, res) {
     const { id } = req.body;
     likedProductsIds.push(id);
     try {
-      const myPost = await db
+      await db
         .collection("likedProductsIds")
         .insertOne({ _id: "user1", productIds: [id] });
     } catch (error) {
-      const myPost = await db
+      await db
         .collection("likedProductsIds")
         .updateOne({ _id: "user1" }, { $push: { productIds: id } });
     }
