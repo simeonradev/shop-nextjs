@@ -1,16 +1,14 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../mongodb";
+import { ObjectId } from "mongodb";
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "my-project",
-      // The credentials is used to generate a suitable form on the sign in page.
-      // You can specify whatever fields you are expecting to be submitted.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
+
       credentials: {
         email: {
           label: "email",
@@ -19,50 +17,73 @@ export default NextAuth({
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        const payload = {
-          username: credentials.username,
-          password: credentials.password,
-        };
-        console.log(payload);
+      async authorize(credentials) {
+        // console.log(credentials, "credentials");
 
         const client = await clientPromise;
         const db = client.db("didi-shop-db");
 
         const userExists = await db
           .collection("users")
-          .findOne({ username: payload.username });
-        console.log(userExists);
-        if (userExists) {
-          // res.status(409).json();
-          return userExists;
-        } else {
+          .findOne({ username: credentials.username });
+        // console.log(userExists, "asd");
+        if (credentials.action === "loginUser") {
+          if (userExists) {
+            return userExists;
+          }
+        } else if (credentials.action === "createUser") {
           await db.collection("users").insertOne({
-            username: payload.username,
-            password: payload.password,
-            // name: user.name,
-            // age: user.age,
-            // describtion: user.describtion,
+            username: credentials.username,
+            password: credentials.password,
           });
           const newUser = await db
             .collection("users")
-            .findOne({ username: payload.username });
-          console.log(newUser);
-          return { user: newUser };
+            .findOne({ username: credentials.username });
+          return newUser;
+        } else if (credentials.action === "updateUser") {
+          if (userExists) {
+            await db.collection("users").updateOne(
+              { username: credentials.username },
+              {
+                $set: {
+                  name: credentials.name,
+                  age: credentials.age,
+                  describtion: credentials.describtion,
+                },
+              }
+            );
+
+            // console.log(credentials, "credentials");
+            const updatedUser = await db
+              .collection("users")
+              .findOne({ username: credentials.username });
+            return updatedUser;
+          }
+        } else if (credentials.action === "deleteUser") {
+          if (userExists) {
+            await db
+              .collection("users")
+              .deleteOne({ _id: ObjectId(`${userExists._id}`) });
+          }
+          return {};
         }
       },
     }),
-    // ...add more providers here
   ],
   secret: "didko",
   pages: {
-    signIn: "/loginNext",
+    signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && user) {
         return {
           ...token,
+
+          username: user.username,
+          age: user.age,
+          describtion: user.describtion,
+
           accessToken: user.token,
           refreshToken: user.refreshToken,
         };
@@ -72,10 +93,15 @@ export default NextAuth({
     },
 
     async session({ session, token }) {
-      session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.accessTokenExpires = token.accessTokenExpires;
-      console.log(session, "session");
+      // session.user.accessToken = token.accessToken;
+      // session.user.refreshToken = token.refreshToken;
+      // session.user.accessTokenExpires = token.accessTokenExpires;
+
+      session.user.username = token.username;
+      session.user.age = token.age;
+      session.user.describtion = token.describtion;
+
+      // console.log(session, "session");
 
       return session;
     },

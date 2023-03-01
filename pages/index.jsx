@@ -6,7 +6,6 @@ import { SELECTED_CATEGORY, GET_PRODUCT_DATA_ARRAY } from "../core/actions";
 
 import ProductList from "../components/ProductList";
 import productDataArray from "../components/productDataArray";
-import { useRouter } from "next/router";
 import Link from "../components/Link";
 
 const style = {
@@ -19,7 +18,6 @@ const style = {
 };
 const HomePage = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const productDataArrayFromReducer = useSelector((state) => {
     return state.productData;
   });
@@ -48,7 +46,6 @@ const HomePage = () => {
           <Button
             onClick={() => {
               dispatch({ type: SELECTED_CATEGORY, data: "car" });
-              // router.push("/filteredByCategory");
             }}
             color="secondary"
           >

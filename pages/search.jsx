@@ -55,6 +55,7 @@ const Search = (props) => {
       })
     );
   }, [searchValue]);
+
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "60px" }}>

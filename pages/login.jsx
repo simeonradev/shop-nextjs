@@ -1,41 +1,55 @@
 import { Grid, Paper, TextField, Button, Box, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
-import { GET_USER, CLEAR_ERROR } from "../core/actions";
+import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const dispatch = useDispatch();
   const router = useRouter();
 
-  const currentUser = useSelector((state) => {
-    return state.user;
-  });
+  const handleCreateAccount = async () => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: username,
+      password: password,
+      action: "createUser",
 
-  const handleLogIn = () => {
-    dispatch({
-      type: GET_USER,
-      data: { username: username, password: password },
+      callbackUrl: `${window.location.origin}/profile`,
     });
-  };
+    // console.log(res);
 
-  const handleCreateAccount = () => {
-    dispatch({
-      type: CLEAR_ERROR,
-    });
-    router.push("/createAccount");
-  };
-
-  useEffect(() => {
-    if (currentUser._id) {
-      router.push("/profile");
+    if (res?.error) {
+      setError(res.error);
+    } else {
+      setError(null);
     }
-  }, [currentUser]);
+    if (res.url) router.push(res.url);
+  };
 
+  const handleLogin = async () => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: username,
+      password: password,
+      action: "loginUser",
+
+      callbackUrl: `${window.location.origin}/profile`,
+    });
+    // console.log(res);
+
+    if (res?.error) {
+      setError("Wrong username/password");
+    } else {
+      setError(null);
+    }
+    if (res.url) router.push(res.url);
+  };
+
+  // console.log(router.query.callbackUrl);
   return (
     <Grid sx={{ display: "flex", pt: "60px" }}>
       <Paper
@@ -66,7 +80,7 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Typography align="center" sx={{ color: "error.main" }}>
-          {currentUser.error}
+          {error}
         </Typography>
         <Button
           type="submit"
@@ -74,20 +88,18 @@ const LoginPage = () => {
           variant="contained"
           sx={{ margin: "10px 0" }}
           fullWidth
-          disabled={currentUser.loading}
-          onClick={handleLogIn}
+          onClick={handleLogin}
         >
-          Log in
+          Login Next
         </Button>
         <Button
           type="submit"
           color="secondary"
           variant="contained"
           fullWidth
-          disabled={currentUser.loading}
           onClick={handleCreateAccount}
         >
-          Create Account
+          Create Next
         </Button>
       </Paper>
     </Grid>

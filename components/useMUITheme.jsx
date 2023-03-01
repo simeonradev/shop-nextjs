@@ -22,7 +22,6 @@ export const GlobalTheme = (props) => {
 
   const ProdCardColor = mode;
 
-  console.log();
   return (
     <ColorModeContext.Provider
       value={{ toggleColorMode, theme, ProdCardColor }}

@@ -6,6 +6,7 @@ import { GlobalModal } from "../components/useModal";
 import { GlobalTheme } from "../components/useMUITheme";
 import NavBar from "../components/NavBar";
 import { SessionProvider } from "next-auth/react";
+import { ProtectRoute } from "../components/ProtectRoute";
 
 const MyApp = ({
   Component,
@@ -21,7 +22,9 @@ const MyApp = ({
           <GlobalModal>
             <NavBar />
 
-            <Component {...pageProps} />
+            <ProtectRoute>
+              <Component {...pageProps} />
+            </ProtectRoute>
           </GlobalModal>
         </GlobalTheme>
       </SessionProvider>
