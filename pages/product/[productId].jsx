@@ -9,11 +9,15 @@ import {
   ADD_PRODUCT_TO_CART,
   DELETE_LIKED_PRODUCT,
   UPDATE_LIKED_PRODUCTS,
+  GET_PRODUCT_DATA_ARRAY,
 } from "../../core/actions";
 
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 import ProductList from "../../components/ProductList";
+import { useEffect } from "react";
+import productDataArray from "../../components/productDataArray";
 
 const style = {
   display: "flex",
@@ -27,12 +31,13 @@ const style = {
 const ProductPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const { productId } = router.query;
 
-  const productDataArray = useSelector((state) => {
-    return state.productData;
-  });
+  // const productDataArray = useSelector((state) => {
+  //   return state.productData;
+  // });
 
   const likedProducts = useSelector((state) => {
     return state.likedProducts;
@@ -57,7 +62,15 @@ const ProductPage = () => {
     );
   };
 
-  if (productDataArray.length === 0) return <Box>Loading</Box>;
+  useEffect(() => {
+    dispatch({
+      type: GET_PRODUCT_DATA_ARRAY,
+      data: productDataArray,
+    });
+  }, [dispatch]);
+
+  if (productDataArray.length === 0)
+    return <Box sx={{ pt: "60px", textAlign: "center" }}>Loading</Box>;
   return (
     <Box
       sx={{
@@ -106,7 +119,7 @@ const ProductPage = () => {
               onClick={() => {
                 dispatch({
                   type: DELETE_LIKED_PRODUCT,
-                  data: selectedProduct.id,
+                  data: { id: selectedProduct.id, userId: session.user.id },
                 });
               }}
               color={"secondary"}
@@ -119,7 +132,7 @@ const ProductPage = () => {
               onClick={() => {
                 dispatch({
                   type: UPDATE_LIKED_PRODUCTS,
-                  data: selectedProduct.id,
+                  data: { id: selectedProduct.id, userId: session.user.id },
                 });
               }}
               color={"secondary"}

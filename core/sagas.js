@@ -9,23 +9,26 @@ import {
   UPDATE_LIKED_PRODUCTS,
   UPDATE_LIKED_PRODUCTS_LOADED,
   UPDATE_LIKED_PRODUCT_ERROR,
-  // DELETE_USER,
-  // DELETE_USER_LOADED,
-  // DELETE_USER_ERROR,
-  // GET_USER,
-  // GET_USER_LOADED,
-  // GET_USER_ERROR,
-  // CREATE_USER,
-  // CREATE_USER_LOADED,
-  // CREATE_USER_ERROR,
-  // UPDATE_USER,
-  // UPDATE_USER_LOADED,
-  // UPDATE_USER_ERROR,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_LOADED,
+  DELETE_PRODUCT_ERROR,
+  GET_PRODUCTS,
+  GET_PRODUCTS_LOADED,
+  GET_PRODUCTS_ERROR,
+  UPDATE_PRODUCTS,
+  UPDATE_PRODUCTS_LOADED,
+  UPDATE_PRODUCT_ERROR,
 } from "./actions";
 
-function* getLikedProducts() {
+function* getLikedProducts(action) {
   try {
-    const res = yield call(fetch, "/api/likedProducts");
+    const res = yield call(
+      fetch,
+      "/api/likedProducts?" +
+        new URLSearchParams({
+          userId: action.data.userId,
+        })
+    );
     const likedProductsIds = yield res.json();
     yield put({
       type: GET_LIKED_PRODUCTS_LOADED,
@@ -44,9 +47,9 @@ function* updateLikedProducts(action) {
     yield call(fetch, "/api/likedProducts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: action.data }),
+      body: JSON.stringify({ id: action.data.id, userId: action.data.userId }),
     });
-    yield put({ type: UPDATE_LIKED_PRODUCTS_LOADED, data: action.data });
+    yield put({ type: UPDATE_LIKED_PRODUCTS_LOADED, data: action.data.id });
   } catch (error) {
     yield put({ type: UPDATE_LIKED_PRODUCT_ERROR, data: "Error" });
   }
@@ -57,108 +60,65 @@ function* deleteLikedProduct(action) {
     yield call(fetch, "/api/likedProducts", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: action.data }),
+      body: JSON.stringify({ id: action.data.id, userId: action.data.userId }),
     });
-    yield put({ type: DELETE_LIKED_PRODUCT_LOADED, data: action.data });
+    yield put({ type: DELETE_LIKED_PRODUCT_LOADED, data: action.data.id });
   } catch (error) {
     yield put({ type: DELETE_LIKED_PRODUCT_ERROR, data: "Error" });
   }
 }
 
-// function* getUser(action) {
-//   try {
-//     const res = yield call(
-//       fetch,
-//       "/api/user?" +
-//         new URLSearchParams({
-//           username: action.data.username,
-//           password: action.data.password,
-//         })
-//     );
-//     const jsonRes = yield res.json();
+function* getProducts(action) {
+  try {
+    const res = yield call(
+      fetch,
+      "/api/allProducts?" + new URLSearchParams(action.data)
+    );
+    const allProducts = yield res.json();
+    yield put({
+      type: GET_PRODUCTS_LOADED,
+      data: allProducts.products.products,
+    });
+  } catch (error) {
+    yield put({
+      type: GET_PRODUCTS_ERROR,
+      data: "Error",
+    });
+  }
+}
 
-//     yield put({
-//       type: GET_USER_LOADED,
-//       data: jsonRes.user,
-//     });
-//   } catch (error) {
-//     yield put({
-//       type: GET_USER_ERROR,
-//       data: { error: "Wrong username or password" },
-//     });
-//   }
-// }
+function* updateProducts(action) {
+  try {
+    yield call(fetch, "/api/allProducts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(action.data),
+    });
+    yield put({ type: UPDATE_PRODUCTS_LOADED, data: action.data });
+  } catch (error) {
+    yield put({ type: UPDATE_PRODUCT_ERROR, data: "Error" });
+  }
+}
 
-// function* createUser(action) {
-//   const res = yield call(fetch, "/api/user", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({
-//       user: {
-//         username: action.data.username,
-//         password: action.data.password,
-//         name: action.data.name,
-//         age: action.data.age,
-//         describtion: action.data.describtion,
-//       },
-//     }),
-//   });
-//   if (res.status === 201) {
-//     const jsonRes = yield res.json();
-
-//     yield put({
-//       type: CREATE_USER_LOADED,
-//       data: jsonRes.user,
-//     });
-//   } else {
-//     yield put({
-//       type: CREATE_USER_ERROR,
-//       data: { error: "User already exists" },
-//     });
-//   }
-// }
-
-// function* deleteUser(action) {
-//   const res = yield call(fetch, "/api/user", {
-//     method: "DELETE",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ user: action.data }),
-//   });
-
-//   if (res.status === 200) {
-//     yield put({ type: DELETE_USER_LOADED, data: action.data });
-//   } else {
-//     yield put({
-//       type: DELETE_USER_ERROR,
-//       data: { error: "Cannot delete user" },
-//     });
-//   }
-// }
-
-// function* updateUser(action) {
-//   try {
-//     yield call(fetch, "/api/user", {
-//       method: "PUT",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(action.data),
-//     });
-//     yield put({ type: UPDATE_USER_LOADED, data: action.data });
-//   } catch (error) {
-//     yield put({ type: UPDATE_USER_ERROR, data: "Error" });
-//   }
-// }
+function* deleteProduct(action) {
+  try {
+    yield call(fetch, "/api/allProducts", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(action.data),
+    });
+    yield put({ type: DELETE_PRODUCT_LOADED, data: action.data });
+  } catch (error) {
+    yield put({ type: DELETE_PRODUCT_ERROR, data: "Error" });
+  }
+}
 
 export function* rootSaga() {
   yield takeLatest(GET_LIKED_PRODUCTS, getLikedProducts);
   yield takeLatest(UPDATE_LIKED_PRODUCTS, updateLikedProducts);
   yield takeLatest(DELETE_LIKED_PRODUCT, deleteLikedProduct);
 
-  // yield takeLatest(GET_USER, getUser);
-  // yield takeLatest(CREATE_USER, createUser);
-  // yield takeLatest(DELETE_USER, deleteUser);
-
-  // yield takeLatest(UPDATE_USER, updateUser);
-
-  // yield takeLatest(UPDATE_NAME_LOADED, updateName);
-  // yield takeLatest(DELETE_NAME, deleteName);
+  yield takeLatest(GET_PRODUCTS, getProducts);
+  yield takeLatest(UPDATE_PRODUCTS, updateProducts);
+  yield takeLatest(DELETE_PRODUCT, deleteProduct);
 }

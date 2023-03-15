@@ -18,28 +18,30 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // console.log(credentials, "credentials");
-
         const client = await clientPromise;
         const db = client.db("didi-shop-db");
 
         const userExists = await db
           .collection("users")
           .findOne({ username: credentials.username });
-        // console.log(userExists, "asd");
         if (credentials.action === "loginUser") {
           if (userExists) {
             return userExists;
           }
         } else if (credentials.action === "createUser") {
-          await db.collection("users").insertOne({
-            username: credentials.username,
-            password: credentials.password,
-          });
-          const newUser = await db
-            .collection("users")
-            .findOne({ username: credentials.username });
-          return newUser;
+          if (userExists) {
+            return null;
+          } else {
+            await db.collection("users").insertOne({
+              username: credentials.username,
+              password: credentials.password,
+              isAdmin: false,
+            });
+            const newUser = await db
+              .collection("users")
+              .findOne({ username: credentials.username });
+            return newUser;
+          }
         } else if (credentials.action === "updateUser") {
           if (userExists) {
             await db.collection("users").updateOne(
@@ -49,11 +51,11 @@ export default NextAuth({
                   name: credentials.name,
                   age: credentials.age,
                   describtion: credentials.describtion,
+                  isAdmin: credentials.isAdmin === "true" ? true : false,
                 },
               }
             );
 
-            // console.log(credentials, "credentials");
             const updatedUser = await db
               .collection("users")
               .findOne({ username: credentials.username });
@@ -80,9 +82,11 @@ export default NextAuth({
         return {
           ...token,
 
+          id: user._id,
           username: user.username,
           age: user.age,
           describtion: user.describtion,
+          isAdmin: user.isAdmin,
 
           accessToken: user.token,
           refreshToken: user.refreshToken,
@@ -97,11 +101,11 @@ export default NextAuth({
       // session.user.refreshToken = token.refreshToken;
       // session.user.accessTokenExpires = token.accessTokenExpires;
 
+      session.user.id = token.id;
       session.user.username = token.username;
       session.user.age = token.age;
       session.user.describtion = token.describtion;
-
-      // console.log(session, "session");
+      session.user.isAdmin = token.isAdmin;
 
       return session;
     },

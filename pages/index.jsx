@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 
-import { SELECTED_CATEGORY, GET_PRODUCT_DATA_ARRAY } from "../core/actions";
+import { GET_PRODUCT_DATA_ARRAY } from "../core/actions";
 
 import ProductList from "../components/ProductList";
 import productDataArray from "../components/productDataArray";
-import Link from "../components/Link";
 
 const style = {
   display: "flex",
@@ -35,65 +34,10 @@ const HomePage = () => {
       type: GET_PRODUCT_DATA_ARRAY,
       data: productDataArray,
     });
-  }, [dispatch]);
+  }, []);
 
   return (
-    <Box sx={{ pt: "60px" }}>
-      <br />
-      <Box>
-        Categories:
-        <Link href="/filteredByCategory">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "car" });
-            }}
-            color="secondary"
-          >
-            Car
-          </Button>
-        </Link>
-        <Link href="/filteredByCategory">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
-            }}
-            color="secondary"
-          >
-            Clothes
-          </Button>
-        </Link>
-        <Link href="/filteredByCategory">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
-            }}
-            color="secondary"
-          >
-            Electronics
-          </Button>
-        </Link>
-        <Link href="/filteredByCategory">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "food" });
-            }}
-            color="secondary"
-          >
-            Food
-          </Button>
-        </Link>
-        <Link href="/filteredByCategory">
-          <Button
-            onClick={() => {
-              dispatch({ type: SELECTED_CATEGORY, data: "garden" });
-            }}
-            color="secondary"
-          >
-            Garden
-          </Button>
-        </Link>
-      </Box>
-      <br />
+    <Box sx={{ pt: "80px" }}>
       <ProductList
         products={productDataArray.filter(
           (productData) => productData.featured === true

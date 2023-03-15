@@ -31,10 +31,14 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selected, setSelected] = useState("");
+
+  const { data: session } = useSession();
+  const { theme, toggleColorMode } = useMUITheme();
 
   //////////////////////////////// Drop Down Menus /////////////////////////////////
 
@@ -102,16 +106,29 @@ const NavBar = () => {
 
   const testArray = productDataArray.map((test) => test.name);
 
+  const router = useRouter();
+
+  const onSearch = () => {
+    const { search } = router;
+    const searchParams = new URLSearchParams(search);
+
+    searchParams.set("searchTerm", searchValue || selected);
+
+    searchParams.set("inStock", "");
+    searchParams.set("location", "All");
+    searchParams.set("rating", "");
+    searchParams.set("minPrice", "");
+    searchParams.set("maxPrice", "");
+
+    router.push(`/search?${searchParams.toString()}`);
+  };
+
   useEffect(() => {
     dispatch({
       type: SEARCH_TERM,
       data: searchValue || selected,
     });
   }, [searchValue, selected, dispatch]);
-
-  const { theme, toggleColorMode } = useMUITheme();
-
-  const { data: session } = useSession();
 
   return (
     <AppBar
@@ -155,11 +172,11 @@ const NavBar = () => {
                 return <TextField {...params} label="Search" size="small" />;
               }}
             />
-            <Link href="/search">
-              <IconButton variant="outlined">
-                <SearchIcon />
-              </IconButton>
-            </Link>
+            {/* <Link href={`/search?searchTerm=${searchValue || selected}`}> */}
+            <IconButton variant="outlined" onClick={onSearch}>
+              <SearchIcon />
+            </IconButton>
+            {/* </Link> */}
           </Box>
         </Box>
 
@@ -237,14 +254,15 @@ const NavBar = () => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Stack direction="row" spacing={10}>
-            <Link href="/test">
+          {session?.user.isAdmin === true ? (
+            <Link href="/adminPanel">
               <Button variant="contained" color="success">
-                TEST
+                Panel
               </Button>
             </Link>
-            {/* <Button onClick={test.toggleColor}>change</Button> */}
+          ) : null}
 
+          <Stack direction="row" spacing={10}>
             <Link href="/contacts">
               <Button variant="text">Contact Us</Button>
             </Link>

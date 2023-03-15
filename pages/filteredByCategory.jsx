@@ -4,16 +4,20 @@ import SideNavBar from "../components/SideNavBar";
 
 import Box from "@mui/material/Box";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ProductList from "../components/ProductList";
+
+import { GET_PRODUCT_DATA_ARRAY } from "../core/actions";
+import productDataArray from "../components/productDataArray";
 
 const FilteredByCategory = () => {
   const [filteredByCategory, setFilteredByCategory] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(filteredByCategory);
+  const dispatch = useDispatch();
 
-  const productDataArray = useSelector((state) => {
-    return state.productData;
-  });
+  // const productDataArray = useSelector((state) => {
+  //   return state.productData;
+  // });
 
   const selectedCategory = useSelector((state) => {
     return state.selectedCategory;
@@ -24,12 +28,20 @@ const FilteredByCategory = () => {
   };
 
   useEffect(() => {
+    dispatch({
+      type: GET_PRODUCT_DATA_ARRAY,
+      data: productDataArray,
+    });
+  }, []);
+
+  useEffect(() => {
     setFilteredByCategory(
       productDataArray.filter(
         (productData) => productData.category === selectedCategory
       )
     );
   }, [selectedCategory, productDataArray]);
+
   return (
     <Box sx={{ display: "flex", pt: "50px" }}>
       <SideNavBar data={filteredByCategory} onFilter={onFilter}></SideNavBar>

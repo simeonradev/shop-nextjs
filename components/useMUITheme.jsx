@@ -20,12 +20,10 @@ export const GlobalTheme = (props) => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
-  const ProdCardColor = mode;
+  const CurrentTheme = mode;
 
   return (
-    <ColorModeContext.Provider
-      value={{ toggleColorMode, theme, ProdCardColor }}
-    >
+    <ColorModeContext.Provider value={{ toggleColorMode, theme, CurrentTheme }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {props.children}

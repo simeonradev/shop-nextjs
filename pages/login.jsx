@@ -23,7 +23,7 @@ const LoginPage = () => {
     // console.log(res);
 
     if (res?.error) {
-      setError(res.error);
+      setError("User already exists");
     } else {
       setError(null);
     }
@@ -90,7 +90,7 @@ const LoginPage = () => {
           fullWidth
           onClick={handleLogin}
         >
-          Login Next
+          Login
         </Button>
         <Button
           type="submit"
@@ -99,7 +99,7 @@ const LoginPage = () => {
           fullWidth
           onClick={handleCreateAccount}
         >
-          Create Next
+          Create Account
         </Button>
       </Paper>
     </Grid>
