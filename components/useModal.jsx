@@ -2,8 +2,8 @@ import { Dialog } from "@mui/material";
 import { createContext, useContext, useState } from "react";
 
 const ModalContext = createContext({
-  showModal: () => {},
-  hideModal: () => {},
+  showProductModal: () => {},
+  hideProductModal: () => {},
 });
 
 export const useModal = () => useContext(ModalContext);

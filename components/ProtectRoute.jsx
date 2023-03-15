@@ -6,7 +6,7 @@ const UNPROTECTED_ROUTES = ["/login", "/"];
 
 export const ProtectRoute = ({ children }) => {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   if (status === "loading") return <Loader />;
 
@@ -15,6 +15,12 @@ export const ProtectRoute = ({ children }) => {
     !UNPROTECTED_ROUTES.includes(router.asPath)
   ) {
     router?.push("/login");
+    return <Loader />;
+  }
+
+  if (session?.user.isAdmin === false && router.asPath === "/adminPanel") {
+    router?.push("/profile");
+
     return <Loader />;
   }
 

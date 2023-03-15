@@ -7,33 +7,38 @@ export default async function handler(req, res) {
   const db = client.db("didi-shop-db");
 
   if (req.method === "POST") {
-    const { id } = req.body;
+    const { id, userId } = req.body;
     likedProductsIds.push(id);
+
     try {
       await db
         .collection("likedProductsIds")
-        .insertOne({ _id: "user1", productIds: [id] });
+        .insertOne({ _id: userId, productIds: [id] });
     } catch (error) {
       await db
         .collection("likedProductsIds")
-        .updateOne({ _id: "user1" }, { $push: { productIds: id } });
+        .updateOne({ _id: userId }, { $push: { productIds: id } });
     }
     res.status(200).json({ likedProductsIds });
   } else if (req.method === "GET") {
-    const allPosts = await db
+    const { query } = req;
+    const { userId } = query;
+
+    const findUser = await db
       .collection("likedProductsIds")
-      .findOne({ _id: "user1" });
+      .findOne({ _id: userId });
     // .toArray();
-    res.status(200).json({ likedProductsIds: allPosts.productIds });
+    res.status(200).json({ likedProductsIds: findUser?.productIds });
   } else if (req.method === "DELETE") {
-    const { id } = req.body;
-    const newLikedProductsIds = likedProductsIds.filter(
-      (productId) => productId !== id
-    );
-    likedProductsIds = newLikedProductsIds;
+    const { id, userId } = req.body;
+    // const newLikedProductsIds = likedProductsIds.filter(
+    //   (productId) => productId !== id
+    // );
+    // likedProductsIds = newLikedProductsIds;
     await db
       .collection("likedProductsIds")
-      .updateOne({ _id: "user1" }, { $pull: { productIds: id } });
+      .updateOne({ _id: userId }, { $pull: { productIds: id } });
+
     res.status(200).json({});
   } else {
     res.status(405).end();

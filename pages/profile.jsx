@@ -1,14 +1,18 @@
-import { Box, Typography, Button, TextField, Paper, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Paper,
+  Grid,
+  Checkbox,
+} from "@mui/material";
 import { useSession, signIn, signOut } from "next-auth/react";
-
 import { useForm } from "react-hook-form";
 
 const MyProfile = () => {
   const { data: session } = useSession();
   const { register, handleSubmit } = useForm();
-
-  console.log(session);
-  // console.log(getValues());
 
   const updateUserDetails = async (userDetails) => {
     await signIn("credentials", {
@@ -75,6 +79,13 @@ const MyProfile = () => {
                 defaultValue={session.user.describtion}
                 {...register("describtion")}
               />
+              <Box>
+                <Checkbox
+                  defaultChecked={session.user.isAdmin}
+                  {...register("isAdmin")}
+                />
+                Admin
+              </Box>
               <Box>
                 <Button type="submit">Apply</Button>
               </Box>

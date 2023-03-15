@@ -27,13 +27,12 @@ const ProductCardBox = styled(Box, {
 }));
 
 const ProductCard = (props) => {
-  const { ProdCardColor } = useMUITheme();
-
+  const { CurrentTheme } = useMUITheme();
   return (
     <Box>
       <Link href={`/product/${props.id}`}>
         <ProductCardBox
-          changeColor={ProdCardColor}
+          changeColor={CurrentTheme}
           onClick={props.onClick}
           sx={{ cursor: "default" }}
         >

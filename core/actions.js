@@ -8,6 +8,8 @@ export const OPEN_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";
 export const MODAL = "MODAL";
 
+///////////////////////////////////////////////////////////////////////////////
+
 export const GET_LIKED_PRODUCTS = "GET_LIKED_PRODUCTS";
 export const GET_LIKED_PRODUCTS_LOADED = "GET_LIKED_PRODUCTS_LOADED";
 export const GET_LIKED_PRODUCTS_ERROR = "GET_LIKED_PRODUCTS_ERROR";
@@ -22,3 +24,19 @@ export const UPDATE_LIKED_PRODUCTS_LOADED_ERROR =
 export const DELETE_LIKED_PRODUCT = "DELETE_LIKED_PRODUCT";
 export const DELETE_LIKED_PRODUCT_LOADED = "DELETE_LIKED_PRODUCT_LOADED";
 export const DELETE_LIKED_PRODUCT_ERROR = "DELETE_LIKED_PRODUCT_ERROR";
+
+///////////////////////////////////////////////////////////////////////////////
+
+export const GET_PRODUCTS = "GET_PRODUCTS";
+export const GET_PRODUCTS_LOADED = "GET_PRODUCTS_LOADED";
+export const GET_PRODUCTS_ERROR = "GET_PRODUCTS_ERROR";
+
+export const UPDATE_PRODUCTS = "UPDATE_PRODUCTS";
+export const UPDATE_PRODUCT_ERROR = "UPDATE_PRODUCT_ERROR";
+
+export const UPDATE_PRODUCTS_LOADED = "UPDATE_PRODUCTS_LOADED";
+export const UPDATE_PRODUCTS_LOADED_ERROR = "UPDATE_PRODUCTS_LOADED_ERROR";
+
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export const DELETE_PRODUCT_LOADED = "DELETE_PRODUCT_LOADED";
+export const DELETE_PRODUCT_ERROR = "DELETE_PRODUCT_ERROR";
