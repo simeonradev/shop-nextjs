@@ -20,7 +20,6 @@ const LoginPage = () => {
 
       callbackUrl: `${window.location.origin}/profile`,
     });
-    // console.log(res);
 
     if (res?.error) {
       setError("User already exists");
@@ -49,7 +48,35 @@ const LoginPage = () => {
     if (res.url) router.push(res.url);
   };
 
-  // console.log(router.query.callbackUrl);
+  const checkCredentials = () => {
+    let errors = 0;
+    let errorMsg = "";
+
+    if (username.length < 5) {
+      errors++;
+      errorMsg += "Username must be at least 5 characters long.\n";
+    }
+    if (password.length < 5) {
+      errors++;
+      errorMsg += "Password must be at least 5 characters long.\n";
+    }
+    if (!password.match(/[A-Z]/)) {
+      errors++;
+      errorMsg += "Password must contain at least one uppercase letter.\n";
+    }
+    if (!password.match(/[!@#$%^&*()\-+=[\]{}\\|;:'",.<>/?]/)) {
+      errors++;
+      errorMsg += "Password must contain at least one special symbol.\n";
+    }
+
+    if (errors >= 1) {
+      setError(errorMsg);
+    } else {
+      setError(null);
+      handleCreateAccount();
+    }
+  };
+
   return (
     <Grid sx={{ display: "flex", pt: "60px" }}>
       <Paper
@@ -97,7 +124,7 @@ const LoginPage = () => {
           color="secondary"
           variant="contained"
           fullWidth
-          onClick={handleCreateAccount}
+          onClick={checkCredentials}
         >
           Create Account
         </Button>

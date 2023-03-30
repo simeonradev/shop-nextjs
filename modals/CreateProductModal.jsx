@@ -1,29 +1,47 @@
-import { Box, Typography, Button, TextField, Grid } from "@mui/material";
+import { Box, Typography, Button, Grid, MenuItem } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 
 import { useDispatch } from "react-redux";
 import { UPDATE_PRODUCTS } from "../core/actions";
 import { v4 as uuid } from "uuid";
+import { ControlledTextField } from "../components/ControlledTextField";
+
+const categories = ["car", "clothes", "electronics", "food", "garden"];
+const ratings = [1, 2, 3, 4, 5];
+const locations = ["Stara Zagora", "Plovdiv", "Sofia"];
+// const inStock = [{ yes: true, no: false }];
 
 export const CreateProductModal = (props) => {
-  const { register, handleSubmit } = useForm();
+  const { handleSubmit, control } = useForm({
+    defaultValues: {
+      name: "",
+      rating: "",
+      category: "",
+      location: "",
+      price: "",
+      inStock: "",
+    },
+  });
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const unique_id = uuid();
 
   const createProduct = (productDetails) => {
+    console.log(productDetails);
     dispatch({
       type: UPDATE_PRODUCTS,
       data: {
         ...productDetails,
+        price: Number(productDetails.price),
+        rating: Number(productDetails.rating),
         createdBy: session.user.id,
         id: unique_id,
       },
     });
+
     props.hideModal();
   };
-
   return (
     <Grid sx={{ display: "flex", p: "20px" }}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -32,36 +50,72 @@ export const CreateProductModal = (props) => {
         </Box>
 
         <form onSubmit={handleSubmit(createProduct)}>
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
+          <ControlledTextField
+            name="name"
             label="Name"
-            {...register("name")}
-          />
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
-            label="Category"
-            {...register("category")}
+            control={control}
+            sx={{ margin: "5px 0" }}
           />
 
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
+          <ControlledTextField
+            name="category"
+            label="Category"
+            control={control}
+            sx={{ margin: "5px 0" }}
+            select
+            renderValue={(value) => value}
+          >
+            {categories.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </ControlledTextField>
+
+          <ControlledTextField
+            name="location"
             label="Location"
-            {...register("location")}
-          />
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
+            control={control}
+            sx={{ margin: "5px 0" }}
+            select
+            renderValue={(value) => value}
+          >
+            {locations.map((location) => (
+              <MenuItem key={location} value={location}>
+                {location}
+              </MenuItem>
+            ))}
+          </ControlledTextField>
+
+          <ControlledTextField
+            name="inStock"
             label="InStock"
-            {...register("inStock")}
+            control={control}
+            sx={{ margin: "5px 0" }}
           />
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
-            label="Rating (1-5)"
-            {...register("rating")}
-          />
-          <TextField
-            sx={{ margin: "5px 0", width: "350px" }}
+
+          <ControlledTextField
+            name="rating"
+            label="Rating"
+            control={control}
+            sx={{ margin: "5px 0" }}
+            select
+            renderValue={(value) => value}
+          >
+            {ratings.map((rating) => (
+              <MenuItem key={rating} value={rating}>
+                {rating}
+              </MenuItem>
+            ))}
+          </ControlledTextField>
+
+          <ControlledTextField
+            type="number"
+            name="price"
             label="Price"
-            {...register("price")}
+            control={control}
+            sx={{ margin: "5px 0" }}
+            inputProps={{ min: 0 }}
           />
 
           <Button

@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 import {
   ADD_PRODUCT_TO_CART,
   REMOVE_PRODUCT_FROM_CART,
-  SELECTED_CATEGORY,
   SEARCH_TERM,
 } from "../core/actions";
 
+import { useMUITheme } from "./useMUITheme";
+import { Stack } from "@mui/system";
+import SearchIcon from "@mui/icons-material/Search";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import {
   TextField,
   Autocomplete,
@@ -19,19 +27,15 @@ import {
   Menu,
   Badge,
   Drawer,
+  Avatar,
+  Typography,
 } from "@mui/material";
-import { Stack } from "@mui/system";
-import SearchIcon from "@mui/icons-material/Search";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 import ShoppingCart from "./ShoppingCart";
 import Link from "./Link";
-import { useMUITheme } from "./useMUITheme";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
+// eslint-disable-next-line no-unused-vars
+import { avatarArray } from "../components/avatarArray";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -39,22 +43,10 @@ const NavBar = () => {
 
   const { data: session } = useSession();
   const { theme, toggleColorMode } = useMUITheme();
+  const { handleSubmit } = useForm();
 
   //////////////////////////////// Drop Down Menus /////////////////////////////////
 
-  //1
-  const [categoryMenuAnchor, setCategoryMenuAnchor] = useState(null);
-
-  const openCategoryMenu = Boolean(categoryMenuAnchor);
-
-  const handleClick = (event) => {
-    setCategoryMenuAnchor(event.currentTarget);
-  };
-  const handleClose = () => {
-    setCategoryMenuAnchor(null);
-  };
-
-  //2
   const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
 
   const openProfileMenu = Boolean(profileMenuAnchor);
@@ -94,8 +86,8 @@ const NavBar = () => {
     return state.productCart.productCartArray;
   });
 
-  const productDataArray = useSelector((state) => {
-    return state.productData;
+  const allProducts = useSelector((state) => {
+    return state.allProducts;
   });
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -104,7 +96,8 @@ const NavBar = () => {
     setSelected(v === null ? "" : v);
   };
 
-  const testArray = productDataArray.map((test) => test.name);
+  const searchProducts = allProducts.map((product) => product.name);
+  const productsPrices = allProducts.map((product) => product.price);
 
   const router = useRouter();
 
@@ -116,9 +109,10 @@ const NavBar = () => {
 
     searchParams.set("inStock", "");
     searchParams.set("location", "All");
+    searchParams.set("category", "All");
     searchParams.set("rating", "");
-    searchParams.set("minPrice", "");
-    searchParams.set("maxPrice", "");
+    searchParams.set("minPrice", `${Math.min(...productsPrices)}`);
+    searchParams.set("maxPrice", `${Math.max(...productsPrices)}`);
 
     router.push(`/search?${searchParams.toString()}`);
   };
@@ -129,6 +123,13 @@ const NavBar = () => {
       data: searchValue || selected,
     });
   }, [searchValue, selected, dispatch]);
+
+  // useEffect(() => {
+  //   if (session) {
+  //     console.log(session.user);
+  //     console.log(avatarArray);
+  //   }
+  // }, [session]);
 
   return (
     <AppBar
@@ -159,98 +160,26 @@ const NavBar = () => {
             </Button>
           </Link>
           <Box sx={{ display: "flex" }}>
-            <Autocomplete
-              onInputChange={(e) => setSearchValue(e.target.value)}
-              id="combo-box"
-              options={testArray}
-              sx={{ width: 300 }}
-              value={selected}
-              onChange={handleChange}
-              noOptionsText={"No products found"}
-              freeSolo={true}
-              renderInput={(params) => {
-                return <TextField {...params} label="Search" size="small" />;
-              }}
-            />
-            {/* <Link href={`/search?searchTerm=${searchValue || selected}`}> */}
+            <form onSubmit={handleSubmit(onSearch)}>
+              <Autocomplete
+                onInputChange={(e) => setSearchValue(e.target.value)}
+                id="combo-box"
+                options={searchProducts}
+                sx={{ width: 300 }}
+                value={selected}
+                onChange={handleChange}
+                noOptionsText={"No products found"}
+                freeSolo={true}
+                renderInput={(params) => {
+                  return <TextField {...params} label="Search" size="small" />;
+                }}
+              />
+            </form>
+
             <IconButton variant="outlined" onClick={onSearch}>
               <SearchIcon />
             </IconButton>
-            {/* </Link> */}
           </Box>
-        </Box>
-
-        <Box sx={{ display: "flex" }}>
-          <Button
-            id="basic-button"
-            aria-controls={openCategoryMenu ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openCategoryMenu ? "true" : undefined}
-            onClick={handleClick}
-          >
-            Categories
-          </Button>
-
-          <Menu
-            id="basic-menu"
-            anchorEl={categoryMenuAnchor}
-            open={openCategoryMenu}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <Link href="/filteredByCategory">
-              <MenuItem
-                onClick={() => {
-                  dispatch({ type: SELECTED_CATEGORY, data: "car" });
-                  handleClose();
-                }}
-              >
-                Car
-              </MenuItem>
-            </Link>
-            <Link href="/filteredByCategory">
-              <MenuItem
-                onClick={() => {
-                  dispatch({ type: SELECTED_CATEGORY, data: "clothes" });
-                  handleClose();
-                }}
-              >
-                Clothes
-              </MenuItem>
-            </Link>
-            <Link href="/filteredByCategory">
-              <MenuItem
-                onClick={() => {
-                  dispatch({ type: SELECTED_CATEGORY, data: "electronics" });
-                  handleClose();
-                }}
-              >
-                Electronics
-              </MenuItem>
-            </Link>
-            <Link href="/filteredByCategory">
-              <MenuItem
-                onClick={() => {
-                  dispatch({ type: SELECTED_CATEGORY, data: "food" });
-                  handleClose();
-                }}
-              >
-                Food
-              </MenuItem>
-            </Link>
-            <Link href="/filteredByCategory">
-              <MenuItem
-                onClick={() => {
-                  dispatch({ type: SELECTED_CATEGORY, data: "garden" });
-                  handleClose();
-                }}
-              >
-                Garden
-              </MenuItem>
-            </Link>
-          </Menu>
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -296,25 +225,18 @@ const NavBar = () => {
           </Drawer>
           {session ? (
             <Box sx={{ display: "flex" }}>
-              <Button
+              <IconButton
                 id="profile-button"
                 aria-controls={openProfileMenu ? "profile-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={openProfileMenu ? "true" : undefined}
                 onClick={handleClickProfileMenu}
               >
-                Profile
-                {/* <Box
-                  component="img"
-                  style={{
-                    borderRadius: "10px",
-                    width: "45px",
-                  }}
-                  alt={"Profile logo"}
-                  src={currentUser === "" ? null : currentUser.img}
-                /> */}
-              </Button>
-
+                <Avatar
+                  src={session.user.img}
+                  style={{ width: "35px", height: "35px" }}
+                />
+              </IconButton>
               <Menu
                 id="profile-menu"
                 anchorEl={profileMenuAnchor}
@@ -323,7 +245,12 @@ const NavBar = () => {
                 MenuListProps={{
                   "aria-labelledby": "profile-button",
                 }}
+                sx={{ minWidth: "200px" }}
               >
+                <Typography sx={{ textAlign: "center", p: "15px" }}>
+                  Hello, {session.user.name}
+                </Typography>
+
                 <Link href="/profile">
                   <MenuItem onClick={handleCloseProfileMenu}>
                     My Profile

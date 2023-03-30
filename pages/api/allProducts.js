@@ -7,7 +7,6 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     const productDetails = req.body;
-
     const productExists = await db
       .collection("allProducts")
       .findOne({ _id: "All Products", "products.id": productDetails.id });

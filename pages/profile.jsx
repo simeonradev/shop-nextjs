@@ -2,19 +2,31 @@ import {
   Box,
   Typography,
   Button,
-  TextField,
   Paper,
   Grid,
   Checkbox,
+  Avatar,
+  MenuItem,
 } from "@mui/material";
+
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { ControlledTextField } from "../components/ControlledTextField";
+
+import { avatarArray } from "../components/avatarArray";
 
 const MyProfile = () => {
   const { data: session } = useSession();
-  const { register, handleSubmit } = useForm();
-
+  const { register, handleSubmit, control } = useForm({
+    defaultValues: {
+      img: session.user.img,
+      describtion: session.user.describtion,
+      age: session.user.age,
+      name: session.user.name,
+    },
+  });
   const updateUserDetails = async (userDetails) => {
+    console.log(userDetails);
     await signIn("credentials", {
       redirect: false,
       username: session.user.username,
@@ -49,45 +61,86 @@ const MyProfile = () => {
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box align="center">
               <Typography variant="h5">Profile Page</Typography>
+              <Avatar
+                src={session.user.img}
+                style={{
+                  margin: "5px",
+                  width: "80px",
+                  height: "80px",
+                }}
+              />
             </Box>
 
             <form onSubmit={handleSubmit(updateUserDetails)}>
-              <TextField
-                sx={{ margin: "5px 0" }}
+              <ControlledTextField
+                name="username"
                 label="Username"
+                control={control}
                 defaultValue={session.user.username}
                 InputProps={{
                   readOnly: true,
                 }}
-              />
-              <TextField
                 sx={{ margin: "5px 0" }}
+              />
+              <ControlledTextField
+                name="name"
                 label="Name"
-                defaultValue={session.user.name}
-                {...register("name")}
+                control={control}
+                sx={{ margin: "5px 0" }}
               />
 
-              <TextField
-                sx={{ margin: "5px 0" }}
+              <ControlledTextField
+                name="age"
                 label="Age"
-                defaultValue={session.user.age}
-                {...register("age")}
-              />
-              <TextField
+                control={control}
                 sx={{ margin: "5px 0" }}
-                label="Describtion"
-                defaultValue={session.user.describtion}
-                {...register("describtion")}
               />
-              <Box>
+
+              <ControlledTextField
+                name="describtion"
+                label="Describtion"
+                control={control}
+                sx={{ margin: "5px 0" }}
+              />
+
+              <ControlledTextField
+                name="img"
+                control={control}
+                select
+                renderValue={(value) => value.split("/").pop().split(".")[0]}
+                label="Select Avatar"
+                sx={{ margin: "5px 0" }}
+              >
+                {avatarArray.map((photo) => {
+                  return (
+                    <MenuItem key={photo} value={photo}>
+                      <Avatar
+                        src={photo}
+                        style={{
+                          width: "45px",
+                          height: "45px",
+                        }}
+                      />
+                      <Typography pl={2}>
+                        {photo.split("/").pop().split(".")[0]}
+                      </Typography>
+                    </MenuItem>
+                  );
+                })}
+              </ControlledTextField>
+
+              <Box sx={{ display: "flex" }}>
                 <Checkbox
                   defaultChecked={session.user.isAdmin}
                   {...register("isAdmin")}
                 />
                 Admin
               </Box>
+
               <Box>
-                <Button type="submit">Apply</Button>
+                <Button type="submit" fullWidth>
+                  Apply
+                </Button>
               </Box>
 
               <Button

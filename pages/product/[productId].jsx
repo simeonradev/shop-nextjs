@@ -1,25 +1,22 @@
-import { Box, Button, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
+import { Box, Button, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
-import { useDispatch, useSelector } from "react-redux";
 
 import {
   ADD_PRODUCT_TO_CART,
   DELETE_LIKED_PRODUCT,
   UPDATE_LIKED_PRODUCTS,
-  GET_PRODUCT_DATA_ARRAY,
+  GET_PRODUCTS,
 } from "../../core/actions";
 
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-
 import ProductList from "../../components/ProductList";
-import { useEffect } from "react";
-import productDataArray from "../../components/productDataArray";
 
-const style = {
+const similarProductsStyle = {
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
@@ -35,15 +32,15 @@ const ProductPage = () => {
 
   const { productId } = router.query;
 
-  // const productDataArray = useSelector((state) => {
-  //   return state.productData;
-  // });
+  const allProducts = useSelector((state) => {
+    return state.allProducts;
+  });
 
   const likedProducts = useSelector((state) => {
     return state.likedProducts;
   });
 
-  const selectedProduct = productDataArray.find((product) => {
+  const selectedProduct = allProducts.find((product) => {
     return product.id === productId;
   });
 
@@ -54,8 +51,8 @@ const ProductPage = () => {
     });
   };
 
-  const test = (a) => {
-    return productDataArray.filter(
+  const similarProducts = (a) => {
+    return allProducts.filter(
       (productData) =>
         productData.rating === selectedProduct.rating - a ||
         productData.rating === selectedProduct.rating + a
@@ -64,12 +61,11 @@ const ProductPage = () => {
 
   useEffect(() => {
     dispatch({
-      type: GET_PRODUCT_DATA_ARRAY,
-      data: productDataArray,
+      type: GET_PRODUCTS,
     });
-  }, [dispatch]);
+  }, []);
 
-  if (productDataArray.length === 0)
+  if (allProducts.length === 0)
     return <Box sx={{ pt: "60px", textAlign: "center" }}>Loading</Box>;
   return (
     <Box
@@ -145,7 +141,10 @@ const ProductPage = () => {
       </Box>
       <Box>
         Similar Products
-        <ProductList style={style} products={test(1)}></ProductList>
+        <ProductList
+          style={similarProductsStyle}
+          products={similarProducts(1)}
+        ></ProductList>
       </Box>
     </Box>
   );

@@ -4,6 +4,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
 import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { styled } from "@mui/system";
 
 import {
@@ -21,7 +22,6 @@ import {
 } from "@mui/material";
 
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 const SideNavBarBox = styled(Box)`
   background-color: #cf6f00;
@@ -51,20 +51,16 @@ const sort = (data) => {
 
 const SideNavBar = ({ data, onFilter }) => {
   const router = useRouter();
-
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [selectedInStock, setSelectedInStock] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [valueArray, setValueArray] = useState([minPrice, maxPrice]);
 
-  const searchTerm = useSelector((state) => {
-    return state.searchTerm;
-  });
-
-  const filterProducts = ({ location, price, stock, rating }) => {
+  const filterProducts = ({ location, price, stock, rating, category }) => {
     return data.filter((productData) => {
       let location1;
       if (location) {
@@ -72,16 +68,26 @@ const SideNavBar = ({ data, onFilter }) => {
           productData.location.includes(selectedLocation) ||
           selectedLocation === "All";
       }
+
+      let category1;
+      if (category) {
+        category1 =
+          productData.category.includes(selectedCategory) ||
+          selectedCategory === "All";
+      }
+
       let stock1;
       if (stock) {
         stock1 =
           productData.inStock === selectedInStock || selectedInStock === "";
       }
+
       let rating1;
       if (rating) {
         rating1 =
           productData.rating === selectedRating || selectedRating === "";
       }
+
       let price1;
       if (price) {
         price1 =
@@ -89,7 +95,7 @@ const SideNavBar = ({ data, onFilter }) => {
           productData.price <= valueArray[1];
       }
 
-      return ![location1, stock1, rating1, price1].includes(false);
+      return ![location1, stock1, rating1, price1, category1].includes(false);
     });
   };
 
@@ -133,6 +139,21 @@ const SideNavBar = ({ data, onFilter }) => {
       setSelectedLocation(inputLocation);
 
       router.query = { ...router.query, location: inputLocation };
+      router.push(router, undefined, { shallow: true });
+    }
+  };
+
+  const handleCategoryChange = (event) => {
+    const inputCategory = String(event);
+    if (inputCategory === selectedCategory) {
+      setSelectedCategory("All");
+
+      router.query = { ...router.query, category: "All" };
+      router.push(router, undefined, { shallow: true });
+    } else {
+      setSelectedCategory(inputCategory);
+
+      router.query = { ...router.query, category: inputCategory };
       router.push(router, undefined, { shallow: true });
     }
   };
@@ -187,6 +208,14 @@ const SideNavBar = ({ data, onFilter }) => {
     router.query = { ...router.query, location: "All" };
     router.push(router, undefined, { shallow: true });
   };
+
+  const handleDeleteCategory = () => {
+    setSelectedCategory("All");
+
+    router.query = { ...router.query, category: "All" };
+    router.push(router, undefined, { shallow: true });
+  };
+
   const handleDeleteStock = () => {
     setSelectedInStock("");
 
@@ -206,22 +235,27 @@ const SideNavBar = ({ data, onFilter }) => {
   const rangeChip = {
     onDelete: handleDeletePrice,
     label: "Clear Price",
-    icon: <SellOutlinedIcon></SellOutlinedIcon>,
+    icon: <SellOutlinedIcon />,
   };
   const locationChip = {
     onDelete: handleDeleteLocation,
     label: "Clear Location",
-    icon: <LocationOnOutlinedIcon></LocationOnOutlinedIcon>,
+    icon: <LocationOnOutlinedIcon />,
   };
   const stockChip = {
     onDelete: handleDeleteStock,
     label: "Clear Stock",
-    icon: <InventoryOutlinedIcon></InventoryOutlinedIcon>,
+    icon: <InventoryOutlinedIcon />,
   };
   const ratingChip = {
     onDelete: handleDeleteRating,
     label: "Clear Rating",
-    icon: <GradeOutlinedIcon></GradeOutlinedIcon>,
+    icon: <GradeOutlinedIcon />,
+  };
+  const categoryChip = {
+    onDelete: handleDeleteCategory,
+    label: "Clear Category",
+    icon: <CategoryOutlinedIcon />,
   };
 
   const chipArray = [];
@@ -229,18 +263,19 @@ const SideNavBar = ({ data, onFilter }) => {
     chipArray.push(rangeChip);
 
   selectedLocation !== "All" && chipArray.push(locationChip);
+  selectedCategory !== "All" && chipArray.push(categoryChip);
+
   selectedInStock !== "" && chipArray.push(stockChip);
   selectedRating !== "" && chipArray.push(ratingChip);
 
   /////////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
-    const { minPrice, maxPrice } = router.query;
-
     const newArray = filterProducts({
       location: true,
       stock: true,
       rating: true,
+      category: true,
     }).map((test) => {
       return test.price;
     });
@@ -248,12 +283,27 @@ const SideNavBar = ({ data, onFilter }) => {
     const min = sort(newArray)[0];
     const max = sort(newArray)[newArray.length - 1];
 
-    if (min !== undefined && max !== undefined && !minPrice && !maxPrice) {
+    if (min !== undefined && max !== undefined) {
       setMinPrice(min);
       setMaxPrice(max);
       setValueArray([min, max]);
     }
-  }, [selectedLocation, selectedInStock, selectedRating, data]);
+
+    router.query = {
+      ...router.query,
+      minPrice: min,
+      maxPrice: max,
+    };
+    router.push(router, undefined, { shallow: true });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedLocation,
+    selectedCategory,
+    selectedInStock,
+    selectedRating,
+    data,
+  ]);
 
   useEffect(() => {
     const filteredProducts = filterProducts({
@@ -261,14 +311,28 @@ const SideNavBar = ({ data, onFilter }) => {
       stock: true,
       rating: true,
       price: true,
+      category: true,
     });
     onFilter(filteredProducts);
-  }, [selectedLocation, selectedInStock, selectedRating, valueArray]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedLocation,
+    selectedCategory,
+    selectedInStock,
+    selectedRating,
+    valueArray,
+    data,
+  ]);
 
   useEffect(() => {
     const { minPrice, maxPrice } = router.query;
 
-    setSelectedLocation(String(router.query?.location) || "All");
+    setSelectedLocation(
+      router.query?.location ? String(router.query?.location) : "All"
+    );
+    setSelectedCategory(
+      router.query?.category ? String(router.query?.category) : "All"
+    );
     setSelectedInStock(Boolean(router.query?.inStock) || "");
     setSelectedRating(Number(router.query?.rating) || "");
 
@@ -278,23 +342,9 @@ const SideNavBar = ({ data, onFilter }) => {
         Number(router.query?.maxPrice),
       ]);
     }
-  }, []);
 
-  console.log(
-    router.query,
-    "router",
-    {
-      searchTerm: searchTerm,
-      inStock: selectedInStock,
-      location: selectedLocation,
-      rating: selectedRating,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-    },
-    "state"
-  );
-
-  // console.log(valueArray);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <Box>
@@ -341,12 +391,31 @@ const SideNavBar = ({ data, onFilter }) => {
 
               <Box sx={{ textAlign: "center" }}>
                 <FormControl sx={{ m: 1, minWidth: 160 }}>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Location
-                  </InputLabel>
+                  <InputLabel>Category</InputLabel>
                   <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
+                    value={
+                      selectedCategory === "All" ? "All" : selectedCategory
+                    }
+                    label="Category"
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      handleCategoryChange(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="car">Car</MenuItem>
+                    <MenuItem value="clothes">Clothes</MenuItem>
+                    <MenuItem value="electronics">Electronics</MenuItem>
+                    <MenuItem value="food">Food</MenuItem>
+                    <MenuItem value="garden">Garden</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <Box sx={{ textAlign: "center" }}>
+                <FormControl sx={{ m: 1, minWidth: 160 }}>
+                  <InputLabel>Location</InputLabel>
+                  <Select
                     value={
                       selectedLocation === "All" ? "All" : selectedLocation
                     }
@@ -357,9 +426,9 @@ const SideNavBar = ({ data, onFilter }) => {
                     }}
                   >
                     <MenuItem value="All">All</MenuItem>
-                    <MenuItem value={"Plovdiv"}>Plovdiv</MenuItem>
-                    <MenuItem value={"Sofia"}>Sofia</MenuItem>
-                    <MenuItem value={"Stara Zagora"}>Stara Zagora</MenuItem>
+                    <MenuItem value="Plovdiv">Plovdiv</MenuItem>
+                    <MenuItem value="Sofia">Sofia</MenuItem>
+                    <MenuItem value="Stara Zagora">Stara Zagora</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
