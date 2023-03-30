@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
+import ProductList from "../components/ProductList";
 import SideNavBar from "../components/SideNavBar";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-
 import { Box, useScrollTrigger, Fade, Fab, Typography } from "@mui/material";
 
-import { useDispatch } from "react-redux";
-import ProductList from "../components/ProductList";
-
-import { GET_PRODUCT_DATA_ARRAY } from "../core/actions";
-import productDataArray from "../components/productDataArray";
-
-import { useRouter } from "next/router";
+import { GET_PRODUCTS } from "../core/actions";
 
 /////////////////////////////Floating to Top Button///////////////////////////////////////////////
 function ScrollTop(props) {
@@ -48,33 +44,28 @@ const Search = (props) => {
   const onFilter = (filteredProductsByFilters) => {
     setFilteredProductsByFilters(filteredProductsByFilters);
   };
-  // const searchValue = useSelector((state) => {
-  //   return state.searchTerm;
-  // });
 
-  // const productDataArray = useSelector((state) => {
-  //   return state.productData;
-  // });
+  const allProducts = useSelector((state) => {
+    return state.allProducts;
+  });
+
+  useEffect(() => {
+    dispatch({
+      type: GET_PRODUCTS,
+    });
+  }, []);
 
   useEffect(() => {
     setFilteredBySearchTerm(
-      productDataArray.filter((data) => {
+      allProducts.filter((data) => {
         return data.name
           .toLowerCase()
           .includes(router.query.searchTerm?.toLowerCase());
       })
     );
-  }, [router]);
+  }, [router, allProducts]);
 
-  useEffect(() => {
-    dispatch({
-      type: GET_PRODUCT_DATA_ARRAY,
-      data: productDataArray,
-    });
-  }, []);
-
-  // console.log(filteredProductsByFilters);
-
+  // console.log(filteredBySearchTerm, filteredProductsByFilters);
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "60px" }}>

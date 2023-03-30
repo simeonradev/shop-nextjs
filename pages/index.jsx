@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
 
-import { GET_PRODUCT_DATA_ARRAY } from "../core/actions";
+import { GET_PRODUCTS } from "../core/actions";
 
 import ProductList from "../components/ProductList";
-import productDataArray from "../components/productDataArray";
 
-const style = {
+const recentlyViewedProductsStyle = {
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
@@ -17,8 +16,9 @@ const style = {
 };
 const HomePage = () => {
   const dispatch = useDispatch();
-  const productDataArrayFromReducer = useSelector((state) => {
-    return state.productData;
+
+  const allProducts = useSelector((state) => {
+    return state.allProducts;
   });
 
   const recentlyViewedArray = useSelector((state) => {
@@ -26,28 +26,23 @@ const HomePage = () => {
   });
 
   const recentlyViewedProducts = recentlyViewedArray.map((productId) =>
-    productDataArrayFromReducer.find((product) => product.id === productId)
+    allProducts.find((product) => product.id === productId)
   );
 
   useEffect(() => {
     dispatch({
-      type: GET_PRODUCT_DATA_ARRAY,
-      data: productDataArray,
+      type: GET_PRODUCTS,
     });
   }, []);
 
   return (
     <Box sx={{ pt: "80px" }}>
-      <ProductList
-        products={productDataArray.filter(
-          (productData) => productData.featured === true
-        )}
-      />
+      <ProductList products={allProducts} />
       {recentlyViewedProducts.length === 0 ? null : (
         <Box>
           Recently Viewed Products
           <ProductList
-            style={style}
+            style={recentlyViewedProductsStyle}
             products={recentlyViewedProducts}
           ></ProductList>
         </Box>

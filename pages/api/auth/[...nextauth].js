@@ -25,7 +25,7 @@ export default NextAuth({
           .collection("users")
           .findOne({ username: credentials.username });
         if (credentials.action === "loginUser") {
-          if (userExists) {
+          if (userExists && credentials.password === userExists.password) {
             return userExists;
           }
         } else if (credentials.action === "createUser") {
@@ -36,6 +36,7 @@ export default NextAuth({
               username: credentials.username,
               password: credentials.password,
               isAdmin: false,
+              img: "",
             });
             const newUser = await db
               .collection("users")
@@ -52,6 +53,7 @@ export default NextAuth({
                   age: credentials.age,
                   describtion: credentials.describtion,
                   isAdmin: credentials.isAdmin === "true" ? true : false,
+                  img: credentials.img,
                 },
               }
             );
@@ -87,6 +89,7 @@ export default NextAuth({
           age: user.age,
           describtion: user.describtion,
           isAdmin: user.isAdmin,
+          img: user.img,
 
           accessToken: user.token,
           refreshToken: user.refreshToken,
@@ -106,6 +109,7 @@ export default NextAuth({
       session.user.age = token.age;
       session.user.describtion = token.describtion;
       session.user.isAdmin = token.isAdmin;
+      session.user.img = token.img;
 
       return session;
     },

@@ -44,6 +44,34 @@ const Test = () => {
     }
   };
 
+  const test = [
+    {
+      label: "Sport",
+      open: openSportCategory,
+      onClick: () => {
+        handleClickSport;
+      },
+      subCategories: [
+        { label: "Football", onClick: () => setSubCategory("football") },
+        { label: "Tenis", onClick: () => setSubCategory("tenis") },
+        {
+          label: "Volleyball",
+          onClick: () => setSubCategory("volleyball"),
+        },
+      ],
+    },
+    {
+      label: "Vacation",
+      open: openVacationCategory,
+      onClick: handleClickVacation,
+      subCategories: [
+        { label: "Sea", onClick: () => setSubCategory("sea") },
+        { label: "Mountain", onClick: () => setSubCategory("mountain") },
+        { label: "Valley", onClick: () => setSubCategory("valley") },
+      ],
+    },
+  ];
+
   console.log("category:", category, "subCategory:", subCategory);
 
   return (
@@ -57,76 +85,29 @@ const Test = () => {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <Box>
-        <Button onClick={handleClickSport}>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText primary="Sport" />
-          {openSportCategory ? <ExpandLess /> : <ExpandMore />}
-        </Button>
-
-        <Collapse in={openSportCategory} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("football")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Football" />
-            </ListItemButton>
-
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("tenis")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Tenis" />
-            </ListItemButton>
-
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("volleyball")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Volleyball" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-      </Box>
-      <Box>
-        <Button onClick={handleClickVacation}>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText primary="Vacation" />
-          {openVacationCategory ? <ExpandLess /> : <ExpandMore />}
-        </Button>
-
-        <Collapse in={openVacationCategory} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("sea")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Sea" />
-            </ListItemButton>
-
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("mountain")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Mountain" />
-            </ListItemButton>
-
-            <ListItemButton
-              sx={{ pl: 4 }}
-              onClick={() => setSubCategory("valley")}
-            >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Valley" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-      </Box>
+      {test.map((category, index) => (
+        <Box key={index}>
+          <Button onClick={category.onClick}>
+            <ListItemIcon></ListItemIcon>
+            <ListItemText primary={category.label} />
+            {category.open ? <ExpandLess /> : <ExpandMore />}
+          </Button>
+          <Collapse in={category.open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {category.subCategories.map((subCategory, subIndex) => (
+                <ListItemButton
+                  key={subIndex}
+                  sx={{ pl: 4 }}
+                  onClick={subCategory.onClick}
+                >
+                  <ListItemIcon></ListItemIcon>
+                  <ListItemText primary={subCategory.label} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Collapse>
+        </Box>
+      ))}
     </List>
   );
 };
