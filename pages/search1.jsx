@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import ProductList from "../components/ProductList";
-import SideNavBar from "../components/SideNavBar";
+import SideNavBar from "../components/SideNavBar1";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Box, useScrollTrigger, Fade, Fab, Typography } from "@mui/material";
@@ -34,14 +34,20 @@ function ScrollTop(props) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 const Search = (props) => {
-  const [data, setData] = useState([]);
+  const [filteredBySearchTerm, setFilteredBySearchTerm] = useState([]);
+  const [filteredProductsByFilters, setFilteredProductsByFilters] =
+    useState(filteredBySearchTerm);
 
-  // console.log(data);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const onFilter = (filteredProductsByFilters) => {
-    setData(filteredProductsByFilters);
+    setFilteredProductsByFilters(filteredProductsByFilters);
   };
+
+  const allProducts = useSelector((state) => {
+    return state.allProducts;
+  });
 
   useEffect(() => {
     dispatch({
@@ -49,18 +55,30 @@ const Search = (props) => {
     });
   }, []);
 
-  // console.log(data);
+  useEffect(() => {
+    setFilteredBySearchTerm(
+      allProducts.filter((data) => {
+        return data.name
+          .toLowerCase()
+          .includes(router.query.searchTerm?.toLowerCase());
+      })
+    );
+  }, [allProducts, router]);
 
+  // console.log(filteredBySearchTerm, filteredProductsByFilters);
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "60px" }}>
-        <SideNavBar onFilter={onFilter}></SideNavBar>
-        {data.length === 0 ? (
+        <SideNavBar
+          data={filteredBySearchTerm}
+          onFilter={onFilter}
+        ></SideNavBar>
+        {filteredProductsByFilters.length === 0 ? (
           <Typography variant="h4">
             No products found, try searching something else
           </Typography>
         ) : (
-          <ProductList products={data} p={3} />
+          <ProductList products={filteredProductsByFilters} p={3} />
         )}
       </Box>
 

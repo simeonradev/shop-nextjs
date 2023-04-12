@@ -50,7 +50,7 @@ const ProductList = ({ products, ...rest }) => {
       sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       {...rest}
     >
-      {products.map((prodDataBySearch) => {
+      {products?.map((prodDataBySearch) => {
         return (
           <ProductCard
             withoutModal

@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
+import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { styled } from "@mui/system";
 
 import {
   Chip,
   Box,
+  Slider,
   InputLabel,
   MenuItem,
   FormControl,
@@ -17,11 +19,9 @@ import {
   Drawer,
   FormControlLabel,
   Tooltip,
-  Button,
 } from "@mui/material";
 
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 const SideNavBarBox = styled(Box)`
   background-color: #cf6f00;
@@ -36,7 +36,20 @@ const SideNavBarBox = styled(Box)`
   height: 100%;
 `;
 
-const SideNavBar = ({ onFilter }) => {
+const sort = (data) => {
+  const array = data;
+  for (let index = 0; index < array.length; index++) {
+    if (array[index] > array[index + 1]) {
+      let temp = array[index];
+      array[index] = array[index + 1];
+      array[index + 1] = temp;
+      index = -1;
+    }
+  }
+  return array;
+};
+
+const SideNavBar = ({ data, onFilter }) => {
   const router = useRouter();
 
   const [selectedLocation, setSelectedLocation] = useState("All");
@@ -44,45 +57,48 @@ const SideNavBar = ({ onFilter }) => {
   const [selectedRating, setSelectedRating] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const searchTerm = useSelector((state) => {
-    return state.searchTerm;
-  });
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [valueArray, setValueArray] = useState([minPrice, maxPrice]);
 
-  const allProducts = useSelector((state) => {
-    return state.allProducts;
-  });
+  const filterProducts = ({ location, price, stock, rating, category }) => {
+    return data.filter((productData) => {
+      let location1;
+      if (location) {
+        location1 =
+          productData.location.includes(selectedLocation) ||
+          selectedLocation === "All";
+      }
 
-  const locationArray = allProducts.filter((product) => {
-    if (product.location === selectedLocation || selectedLocation === "All") {
-      return product;
-    }
-  });
+      let category1;
+      if (category) {
+        category1 =
+          productData.category.includes(selectedCategory) ||
+          selectedCategory === "All";
+      }
 
-  const categoryArray = locationArray.filter((product) => {
-    if (product.category === selectedCategory || selectedCategory === "All") {
-      return product;
-    }
-  });
+      let stock1;
+      if (stock) {
+        stock1 =
+          productData.inStock === selectedInStock || selectedInStock === "";
+      }
 
-  const ratingArray = categoryArray.filter((product) => {
-    if (product.rating === selectedRating || selectedRating === "") {
-      return product;
-    }
-  });
+      let rating1;
+      if (rating) {
+        rating1 =
+          productData.rating === selectedRating || selectedRating === "";
+      }
 
-  const inStockArray = ratingArray.filter((product) => {
-    if (product.inStock === selectedInStock || selectedInStock === "") {
-      return product;
-    }
-  });
+      let price1;
+      if (price) {
+        price1 =
+          productData.price >= valueArray[0] &&
+          productData.price <= valueArray[1];
+      }
 
-  const filteredBySearch = inStockArray.filter((data) => {
-    return data.name
-      .toLowerCase()
-      .includes(router.query.searchTerm?.toLowerCase());
-  });
-
-  console.log(filteredBySearch, "new");
+      return ![location1, stock1, rating1, price1, category1].includes(false);
+    });
+  };
 
   const availableRatings = [
     { rating: 1 },
@@ -92,15 +108,39 @@ const SideNavBar = ({ onFilter }) => {
     { rating: 5 },
   ];
 
+  function valuetext(value) {
+    return { value };
+  }
+
+  const handlePriceChange = (event, newValue) => {
+    if (newValue[1] > maxPrice) {
+      setValueArray([newValue[0], maxPrice]);
+    } else if (newValue[0] < minPrice) {
+      setValueArray([minPrice, newValue[1]]);
+    } else {
+      setValueArray(newValue);
+      router.query = {
+        ...router.query,
+        minPrice: newValue[0],
+        maxPrice: newValue[1],
+      };
+      router.push(router, undefined, { shallow: true });
+    }
+  };
   //////////////////////////////////// Handle Change ////////////////////////////////
 
   const handleLocationChange = (event) => {
     const inputLocation = String(event);
-
     if (inputLocation === selectedLocation) {
       setSelectedLocation("All");
+
+      router.query = { ...router.query, location: "All" };
+      router.push(router, undefined, { shallow: true });
     } else {
       setSelectedLocation(inputLocation);
+
+      router.query = { ...router.query, location: inputLocation };
+      router.push(router, undefined, { shallow: true });
     }
   };
 
@@ -108,8 +148,14 @@ const SideNavBar = ({ onFilter }) => {
     const inputCategory = String(event);
     if (inputCategory === selectedCategory) {
       setSelectedCategory("All");
+
+      router.query = { ...router.query, category: "All" };
+      router.push(router, undefined, { shallow: true });
     } else {
       setSelectedCategory(inputCategory);
+
+      router.query = { ...router.query, category: inputCategory };
+      router.push(router, undefined, { shallow: true });
     }
   };
 
@@ -117,8 +163,14 @@ const SideNavBar = ({ onFilter }) => {
     const inputInStock = Boolean(event.target.value);
     if (inputInStock === selectedInStock) {
       setSelectedInStock("");
+
+      router.query = { ...router.query, inStock: "" };
+      router.push(router, undefined, { shallow: true });
     } else {
       setSelectedInStock(inputInStock);
+
+      router.query = { ...router.query, inStock: inputInStock };
+      router.push(router, undefined, { shallow: true });
     }
   };
 
@@ -127,13 +179,29 @@ const SideNavBar = ({ onFilter }) => {
 
     if (inputRating === selectedRating) {
       setSelectedRating("");
+
+      router.query = { ...router.query, rating: "" };
+      router.push(router, undefined, { shallow: true });
     } else {
       setSelectedRating(inputRating);
+
+      router.query = { ...router.query, rating: inputRating };
+      router.push(router, undefined, { shallow: true });
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////// Handle Delete ////////////////////////////////
+  const handleDeletePrice = () => {
+    setValueArray([minPrice, maxPrice]);
+
+    router.query = {
+      ...router.query,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+    };
+    router.push(router, undefined, { shallow: true });
+  };
 
   const handleDeleteLocation = () => {
     setSelectedLocation("All");
@@ -165,7 +233,11 @@ const SideNavBar = ({ onFilter }) => {
   //////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////// Chips //////////////////////////////
-
+  const rangeChip = {
+    onDelete: handleDeletePrice,
+    label: "Clear Price",
+    icon: <SellOutlinedIcon />,
+  };
   const locationChip = {
     onDelete: handleDeleteLocation,
     label: "Clear Location",
@@ -188,6 +260,8 @@ const SideNavBar = ({ onFilter }) => {
   };
 
   const chipArray = [];
+  (minPrice !== valueArray[0] || maxPrice !== valueArray[1]) &&
+    chipArray.push(rangeChip);
 
   selectedLocation !== "All" && chipArray.push(locationChip);
   selectedCategory !== "All" && chipArray.push(categoryChip);
@@ -197,51 +271,81 @@ const SideNavBar = ({ onFilter }) => {
 
   /////////////////////////////////////////////////////////////////////////////////
 
-  const click = () => {
-    const { search } = router;
-    const searchParams = new URLSearchParams(search);
-
-    searchParams.set("searchTerm", `${searchTerm}`);
-    searchParams.set("inStock", `${selectedInStock}`);
-    searchParams.set("location", `${selectedLocation}`);
-    searchParams.set("category", `${selectedCategory}`);
-    searchParams.set("rating", `${selectedRating}`);
-
-    router.push(`/search?${searchParams.toString()}`);
-
-    onFilter(filteredBySearch);
-  };
-
-  // console.log(filteredProducts);
-
-  // useEffect(() => {
-  //   setSelectedLocation(
-  //     router.query?.location ? String(router.query?.location) : "All"
-  //   );
-  //   setSelectedCategory(
-  //     router.query?.category ? String(router.query?.category) : "All"
-  //   );
-  //   setSelectedInStock(Boolean(router.query?.inStock) || "");
-  //   setSelectedRating(Number(router.query?.rating) || "");
-  // }, []);
   useEffect(() => {
-    const { search } = router;
-    const searchParams = new URLSearchParams(search);
+    const newArray = filterProducts({
+      location: true,
+      stock: true,
+      rating: true,
+      category: true,
+    }).map((test) => {
+      return test.price;
+    });
 
-    searchParams.set("searchTerm", `${searchTerm}`);
-    searchParams.set("inStock", `${selectedInStock}`);
-    searchParams.set("location", `${selectedLocation}`);
-    searchParams.set("category", `${selectedCategory}`);
-    searchParams.set("rating", `${selectedRating}`);
+    const min = sort(newArray)[0];
+    const max = sort(newArray)[newArray.length - 1];
 
-    router.push(`/search?${searchParams.toString()}`);
+    if (min !== undefined && max !== undefined) {
+      setMinPrice(min);
+      setMaxPrice(max);
+      setValueArray([min, max]);
+    }
+
+    router.query = {
+      ...router.query,
+      minPrice: min,
+      maxPrice: max,
+    };
+    router.push(router, undefined, { shallow: true });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    selectedRating,
-    selectedCategory,
     selectedLocation,
+    selectedCategory,
     selectedInStock,
-    searchTerm,
+    selectedRating,
+    // data,
   ]);
+
+  useEffect(() => {
+    const filteredProducts = filterProducts({
+      location: true,
+      stock: true,
+      rating: true,
+      price: true,
+      category: true,
+    });
+    onFilter(filteredProducts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedLocation,
+    selectedCategory,
+    selectedInStock,
+    selectedRating,
+    valueArray,
+    data,
+  ]);
+
+  useEffect(() => {
+    const { minPrice, maxPrice } = router.query;
+
+    setSelectedLocation(
+      router.query?.location ? String(router.query?.location) : "All"
+    );
+    setSelectedCategory(
+      router.query?.category ? String(router.query?.category) : "All"
+    );
+    setSelectedInStock(Boolean(router.query?.inStock) || "");
+    setSelectedRating(Number(router.query?.rating) || "");
+
+    if (minPrice && maxPrice) {
+      setValueArray([
+        Number(router.query?.minPrice),
+        Number(router.query?.maxPrice),
+      ]);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <Box>
@@ -269,7 +373,23 @@ const SideNavBar = ({ onFilter }) => {
                   />
                 </Tooltip>
               ))}
-              <Box sx={{ width: 150, margin: "20px auto 20px auto" }}></Box>
+
+              <Box sx={{ width: 150, margin: "20px auto 20px auto" }}>
+                <Slider
+                  min={minPrice}
+                  max={maxPrice}
+                  getAriaLabel={() => "Price range"}
+                  value={valueArray}
+                  onChange={handlePriceChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valuetext}
+                />
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Box>{valueArray[0]}</Box>
+                  <Box>{valueArray[1]}</Box>
+                </Box>
+              </Box>
+
               <Box sx={{ textAlign: "center" }}>
                 <FormControl sx={{ m: 1, minWidth: 160 }}>
                   <InputLabel>Category</InputLabel>
@@ -292,6 +412,7 @@ const SideNavBar = ({ onFilter }) => {
                   </Select>
                 </FormControl>
               </Box>
+
               <Box sx={{ textAlign: "center" }}>
                 <FormControl sx={{ m: 1, minWidth: 160 }}>
                   <InputLabel>Location</InputLabel>
@@ -312,6 +433,7 @@ const SideNavBar = ({ onFilter }) => {
                   </Select>
                 </FormControl>
               </Box>
+
               <h3> Availability:</h3>
               <FormControlLabel
                 value="start"
@@ -326,6 +448,7 @@ const SideNavBar = ({ onFilter }) => {
                 label="In Stock:"
                 labelPlacement="start"
               />
+
               <h3> Sort by Rating:</h3>
               {availableRatings.map((object, i) => {
                 return (
@@ -346,7 +469,6 @@ const SideNavBar = ({ onFilter }) => {
                   </Box>
                 );
               })}
-              <Button onClick={click}>asd</Button>
             </SideNavBarBox>
           </Box>
         </Box>

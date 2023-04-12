@@ -98,7 +98,6 @@ const NavBar = () => {
 
   const searchProducts = allProducts.map((product) => product.name);
   const productsPrices = allProducts.map((product) => product.price);
-
   const router = useRouter();
 
   const onSearch = () => {
@@ -123,13 +122,6 @@ const NavBar = () => {
       data: searchValue || selected,
     });
   }, [searchValue, selected, dispatch]);
-
-  // useEffect(() => {
-  //   if (session) {
-  //     console.log(session.user);
-  //     console.log(avatarArray);
-  //   }
-  // }, [session]);
 
   return (
     <AppBar

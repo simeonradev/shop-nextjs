@@ -115,7 +115,7 @@ export const CreateProductModal = (props) => {
             label="Price"
             control={control}
             sx={{ margin: "5px 0" }}
-            inputProps={{ min: 0 }}
+            InputProps={{ inputProps: { min: 0 } }}
           />
 
           <Button
