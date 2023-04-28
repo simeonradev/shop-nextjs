@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+
 import {
   useDeleteProduct,
   useGetProducts,
@@ -9,8 +10,6 @@ const ReactQuery = () => {
   const { data: products, isLoading, isError } = useGetProducts("1");
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
-
-  console.log(products);
 
   if (isLoading) {
     return <Typography sx={{ pt: "70px" }}>Loading...</Typography>;

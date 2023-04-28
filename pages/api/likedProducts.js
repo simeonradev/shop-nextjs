@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const findUser = await db
       .collection("likedProductsIds")
       .findOne({ _id: userId });
-    // .toArray();
+
     res.status(200).json({ likedProductsIds: findUser?.productIds });
   } else if (req.method === "DELETE") {
     const { id, userId } = req.body;

@@ -1,22 +1,24 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const productsKeys = createQueryKeys("allProducts", {
-  getProducts: () => {
+export const likedProductsKeys = createQueryKeys("likedProducts", {
+  getLikedProducts: ({ userId }) => {
     return {
-      queryKey: [null],
+      queryKey: [userId],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts");
-        const jsonData = await data.json();
-        return jsonData;
+        const data = await fetch(
+          "/api/likedProducts?" + new URLSearchParams({ userId })
+        );
+        const { likedProductsIds } = await data.json();
+        return likedProductsIds;
       },
     };
   },
 
-  updateProduct: (payload) => {
+  updateLikedProduct: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/likedProducts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -27,11 +29,11 @@ export const productsKeys = createQueryKeys("allProducts", {
     };
   },
 
-  deleteProduct: (payload) => {
+  deleteLikedProduct: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/likedProducts", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

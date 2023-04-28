@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import ProductList from "../components/ProductList";
@@ -8,7 +7,7 @@ import SideNavBar from "../components/SideNavBar";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Box, useScrollTrigger, Fade, Fab, Typography } from "@mui/material";
 
-import { GET_PRODUCTS } from "../core/actions";
+import { useGetProducts } from "../core/react-query/features/products";
 
 /////////////////////////////Floating to Top Button///////////////////////////////////////////////
 function ScrollTop(props) {
@@ -34,33 +33,42 @@ function ScrollTop(props) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 const Search = (props) => {
-  const [data, setData] = useState([]);
+  const [filteredBySearchTerm, setFilteredBySearchTerm] = useState([]);
+  const [filteredProductsByFilters, setFilteredProductsByFilters] =
+    useState(filteredBySearchTerm);
 
-  // console.log(data);
-  const dispatch = useDispatch();
+  const { data: products } = useGetProducts();
+
+  const router = useRouter();
 
   const onFilter = (filteredProductsByFilters) => {
-    setData(filteredProductsByFilters);
+    setFilteredProductsByFilters(filteredProductsByFilters);
   };
 
   useEffect(() => {
-    dispatch({
-      type: GET_PRODUCTS,
-    });
-  }, []);
+    setFilteredBySearchTerm(
+      products?.filter((data) => {
+        return data.name
+          .toLowerCase()
+          .includes(router.query.searchTerm?.toLowerCase());
+      })
+    );
+  }, [products, router]);
 
-  // console.log(data);
-
+  // console.log(filteredBySearchTerm, filteredProductsByFilters);
   return (
     <Box>
       <Box sx={{ display: "flex", pt: "60px" }}>
-        <SideNavBar onFilter={onFilter}></SideNavBar>
-        {data.length === 0 ? (
+        <SideNavBar
+          data={filteredBySearchTerm}
+          onFilter={onFilter}
+        ></SideNavBar>
+        {filteredProductsByFilters.length === 0 ? (
           <Typography variant="h4">
             No products found, try searching something else
           </Typography>
         ) : (
-          <ProductList products={data} p={3} />
+          <ProductList products={filteredProductsByFilters} p={3} />
         )}
       </Box>
 

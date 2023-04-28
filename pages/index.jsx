@@ -1,8 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
-import { GET_PRODUCTS } from "../core/actions";
+import { useSession } from "next-auth/react";
+
+import { useGetProducts } from "../core/react-query/features/products";
+import {
+  useDeleteRecentlyViewedProducts,
+  useGetRecentlyViewed,
+} from "../core/react-query/features/recently-viewed-products";
 
 import ProductList from "../components/ProductList";
 
@@ -15,35 +19,43 @@ const recentlyViewedProductsStyle = {
   overflowX: "scroll",
 };
 const HomePage = () => {
-  const dispatch = useDispatch();
+  const { data: session, status } = useSession();
 
-  const allProducts = useSelector((state) => {
-    return state.allProducts;
+  const { data: products, isLoading } = useGetProducts();
+  const { data: recentlyViewedProducts } = useGetRecentlyViewed({
+    userId: session?.user.id,
   });
+  const deleteRecentlyViewedProducts = useDeleteRecentlyViewedProducts();
 
-  const recentlyViewedArray = useSelector((state) => {
-    return state.recentlyViewed;
-  });
-
-  const recentlyViewedProducts = recentlyViewedArray.map((productId) =>
-    allProducts.find((product) => product.id === productId)
+  const recentlyViewedProductsIds = recentlyViewedProducts.map((productId) =>
+    products.find((product) => product.id === productId)
   );
 
-  useEffect(() => {
-    dispatch({
-      type: GET_PRODUCTS,
-    });
-  }, []);
-
+  if (isLoading) {
+    return <Box sx={{ pt: "100px", textAlign: "center" }}>Loading</Box>;
+  }
   return (
     <Box sx={{ pt: "80px" }}>
-      <ProductList products={allProducts} />
-      {recentlyViewedProducts.length === 0 ? null : (
+      <ProductList products={products} />
+      {recentlyViewedProductsIds.length === 0 ? null : (
         <Box>
           Recently Viewed Products
+          <Button
+            onClick={() => {
+              if (status === "authenticated") {
+                deleteRecentlyViewedProducts.mutate({
+                  userId: session.user.id,
+                });
+              } else {
+                console.log("not logged in");
+              }
+            }}
+          >
+            Clear
+          </Button>
           <ProductList
             style={recentlyViewedProductsStyle}
-            products={recentlyViewedProducts}
+            products={recentlyViewedProductsIds}
           ></ProductList>
         </Box>
       )}

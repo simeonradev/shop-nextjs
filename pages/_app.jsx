@@ -1,7 +1,7 @@
-import { Provider } from "react-redux";
-import { useState } from "react";
+// import { Provider } from "react-redux";
+// import { wrapper } from "../core/store";
 
-import { wrapper } from "../core/store";
+import { useState } from "react";
 
 import { GlobalModal } from "../components/useModal";
 import { GlobalTheme } from "../components/useMUITheme";
@@ -20,9 +20,9 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-  ...rest
+  // ...rest
 }) => {
-  const { store } = wrapper.useWrappedStore(rest);
+  // const { store } = wrapper.useWrappedStore(rest);
 
   const asyncStoragePersister = createAsyncStoragePersister({
     storage: localForage,
@@ -31,31 +31,31 @@ const MyApp = ({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <Provider store={store}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister: asyncStoragePersister }}
-        onSuccess={() => {
-          // resume mutations after initial restore from localStorage was successful
-          queryClient.resumePausedMutations();
-        }}
-      >
-        <Hydrate state={pageProps?.dehydratedState}>
-          <SessionProvider session={session}>
-            <GlobalTheme>
-              <GlobalModal>
-                <NavBar />
-                <ReactQueryDevtools />
+    // <Provider store={store}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister }}
+      onSuccess={() => {
+        // resume mutations after initial restore from localStorage was successful
+        queryClient.resumePausedMutations();
+      }}
+    >
+      <Hydrate state={pageProps?.dehydratedState}>
+        <SessionProvider session={session}>
+          <GlobalTheme>
+            <GlobalModal>
+              <NavBar />
+              <ReactQueryDevtools />
 
-                <ProtectRoute>
-                  <Component {...pageProps} />
-                </ProtectRoute>
-              </GlobalModal>
-            </GlobalTheme>
-          </SessionProvider>
-        </Hydrate>
-      </PersistQueryClientProvider>
-    </Provider>
+              <ProtectRoute>
+                <Component {...pageProps} />
+              </ProtectRoute>
+            </GlobalModal>
+          </GlobalTheme>
+        </SessionProvider>
+      </Hydrate>
+    </PersistQueryClientProvider>
+    // </Provider>
   );
 };
 

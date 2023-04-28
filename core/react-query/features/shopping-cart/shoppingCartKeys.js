@@ -1,22 +1,24 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const productsKeys = createQueryKeys("allProducts", {
-  getProducts: () => {
+export const shoppingCartKeys = createQueryKeys("shoppingCart", {
+  getShoppingCart: ({ userId }) => {
     return {
-      queryKey: [null],
+      queryKey: [userId],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts");
-        const jsonData = await data.json();
-        return jsonData;
+        const data = await fetch(
+          "/api/shoppingCart?" + new URLSearchParams({ userId })
+        );
+        const { shoppingCart } = await data.json();
+        return shoppingCart;
       },
     };
   },
 
-  updateProduct: (payload) => {
+  updateShoppingCart: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/shoppingCart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -27,11 +29,11 @@ export const productsKeys = createQueryKeys("allProducts", {
     };
   },
 
-  deleteProduct: (payload) => {
+  deleteShoppingCart: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/shoppingCart", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

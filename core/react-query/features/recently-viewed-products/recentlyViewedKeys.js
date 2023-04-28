@@ -1,22 +1,24 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const productsKeys = createQueryKeys("allProducts", {
-  getProducts: () => {
+export const recentlyViewedKeys = createQueryKeys("recentlyViewedProducts", {
+  getRecentlyViewedProducts: ({ userId }) => {
     return {
-      queryKey: [null],
+      queryKey: [userId],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts");
-        const jsonData = await data.json();
-        return jsonData;
+        const data = await fetch(
+          "/api/recentlyViewedProducts?" + new URLSearchParams({ userId })
+        );
+        const { recentlyViewedProducts } = await data.json();
+        return recentlyViewedProducts;
       },
     };
   },
 
-  updateProduct: (payload) => {
+  updateRecentlyViewedProducts: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/recentlyViewedProducts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -27,11 +29,11 @@ export const productsKeys = createQueryKeys("allProducts", {
     };
   },
 
-  deleteProduct: (payload) => {
+  deleteRecentlyViewedProducts: (payload) => {
     return {
       queryKey: [null],
       queryFn: async () => {
-        const data = await fetch("/api/allProducts", {
+        const data = await fetch("/api/recentlyViewedProducts", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

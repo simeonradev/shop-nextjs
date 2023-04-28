@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-
-import {
-  ADD_PRODUCT_TO_CART,
-  REMOVE_PRODUCT_FROM_CART,
-  SEARCH_TERM,
-} from "../core/actions";
 
 import { useMUITheme } from "./useMUITheme";
 import { Stack } from "@mui/system";
@@ -36,10 +29,18 @@ import Link from "./Link";
 
 // eslint-disable-next-line no-unused-vars
 import { avatarArray } from "../components/avatarArray";
+import { useGetProducts } from "../core/react-query/features/products";
+import {
+  useGetShoppingCart,
+  useUpdateShoppingCart,
+  useDeleteShoppingCart,
+} from "../core/react-query/features/shopping-cart";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selected, setSelected] = useState("");
+
+  const { data: products } = useGetProducts();
 
   const { data: session } = useSession();
   const { theme, toggleColorMode } = useMUITheme();
@@ -66,29 +67,35 @@ const NavBar = () => {
     return items.reduce((acc, item) => acc + item.amount, 0);
   };
 
-  const dispatch = useDispatch();
+  const { data: shoppingCartItems } = useGetShoppingCart({
+    userId: session?.user.id,
+  });
+  const updateShoppingCart = useUpdateShoppingCart();
+  const deleteShoppingCart = useDeleteShoppingCart();
 
   const handleAddToCart = (clickedItem) => {
-    dispatch({
-      type: ADD_PRODUCT_TO_CART,
-      data: clickedItem,
+    updateShoppingCart.mutate({
+      ...clickedItem,
+      userId: session.user.id,
     });
   };
 
   const handleRemoveFromCart = (id) => {
-    dispatch({
-      type: REMOVE_PRODUCT_FROM_CART,
-      data: id,
-    });
+    deleteShoppingCart.mutate(
+      {
+        id,
+        userId: session.user.id,
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data);
+        },
+        onError: (data) => {
+          console.log(data);
+        },
+      }
+    );
   };
-
-  const productCartArray = useSelector((state) => {
-    return state.productCart.productCartArray;
-  });
-
-  const allProducts = useSelector((state) => {
-    return state.allProducts;
-  });
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -96,8 +103,8 @@ const NavBar = () => {
     setSelected(v === null ? "" : v);
   };
 
-  const searchProducts = allProducts.map((product) => product.name);
-  const productsPrices = allProducts.map((product) => product.price);
+  const searchProducts = products.map((product) => product.name);
+  const productsPrices = products.map((product) => product.price);
   const router = useRouter();
 
   const onSearch = () => {
@@ -115,13 +122,6 @@ const NavBar = () => {
 
     router.push(`/search?${searchParams.toString()}`);
   };
-
-  useEffect(() => {
-    dispatch({
-      type: SEARCH_TERM,
-      data: searchValue || selected,
-    });
-  }, [searchValue, selected, dispatch]);
 
   return (
     <AppBar
@@ -193,7 +193,7 @@ const NavBar = () => {
           >
             <AddShoppingCartIcon variant="outlined" />
             <Badge
-              badgeContent={getTotalItems(productCartArray)}
+              badgeContent={getTotalItems(shoppingCartItems)}
               color="error"
             ></Badge>
           </Button>
@@ -210,7 +210,7 @@ const NavBar = () => {
             onClose={() => setCartOpen(false)}
           >
             <ShoppingCart
-              cartItems={productCartArray}
+              cartItems={shoppingCartItems}
               addToCart={handleAddToCart}
               removeFromCart={handleRemoveFromCart}
             />

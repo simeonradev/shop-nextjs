@@ -41,6 +41,7 @@
     "redux": "^4.2.0",
     "redux-saga": "^1.2.2",
     "redux-thunk": "^2.4.1",
+    "use-deep-compare-effect": "^1.8.1",
     "use-dehydrated-state": "^0.1.0",
     "uuidv4": "^6.2.13"
   },
