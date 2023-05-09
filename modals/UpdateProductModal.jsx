@@ -1,14 +1,15 @@
 import { Box, Typography, Button, Grid, MenuItem } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { ControlledTextField } from "../components/ControlledTextField";
-import { UPDATE_PRODUCTS } from "../core/actions";
+import { useUpdateProduct } from "../core/react-query/features/products";
 
 const categories = ["car", "clothes", "electronics", "food", "garden"];
 const ratings = [1, 2, 3, 4, 5];
 const locations = ["Stara Zagora", "Plovdiv", "Sofia"];
 
 export const UpdateProductModal = (props) => {
+  const updateProduct = useUpdateProduct();
+
   const productInfo = props.productDetails;
 
   const { handleSubmit, control } = useForm({
@@ -21,20 +22,14 @@ export const UpdateProductModal = (props) => {
       inStock: productInfo.inStock,
     },
   });
-  const dispatch = useDispatch();
 
-  const updateProduct = (productDetails) => {
-    const updatedProduct = {
+  const updateProductSubmit = (productDetails) => {
+    updateProduct.mutate({
       ...productDetails,
       price: Number(productDetails.price),
       rating: Number(productDetails.rating),
       createdBy: productInfo.createdBy,
       id: productInfo.id,
-    };
-
-    dispatch({
-      type: UPDATE_PRODUCTS,
-      data: updatedProduct,
     });
 
     props.hideModal();
@@ -47,7 +42,7 @@ export const UpdateProductModal = (props) => {
           <Typography variant="h5">Update Product</Typography>
         </Box>
 
-        <form onSubmit={handleSubmit(updateProduct)}>
+        <form onSubmit={handleSubmit(updateProductSubmit)}>
           <ControlledTextField
             name="name"
             label="Name"

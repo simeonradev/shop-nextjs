@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
@@ -7,14 +5,20 @@ import { Box, Button, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import {
-  ADD_PRODUCT_TO_CART,
-  DELETE_LIKED_PRODUCT,
-  UPDATE_LIKED_PRODUCTS,
-  GET_PRODUCTS,
-} from "../../core/actions";
-
 import ProductList from "../../components/ProductList";
+import { useGetProducts } from "../../core/react-query/features/products";
+
+import {
+  useDeleteLikedProduct,
+  useUpdateLikedProduct,
+  useGetLikedProducts,
+} from "../../core/react-query/features/liked-products";
+
+import {
+  useAddNewToShoppingCart,
+  useGetShoppingCart,
+  useUpdateShoppingCart,
+} from "../../core/react-query/features/shopping-cart";
 
 const similarProductsStyle = {
   display: "flex",
@@ -26,47 +30,61 @@ const similarProductsStyle = {
 };
 
 const ProductPage = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const { data: session } = useSession();
+
+  const { data: session, status } = useSession();
+  const { data: products, isLoading } = useGetProducts();
+
+  const { data: likedProducts } = useGetLikedProducts({
+    userId: session.user.id,
+  });
+  const updateLikedProduct = useUpdateLikedProduct();
+  const deleteLikedProduct = useDeleteLikedProduct();
 
   const { productId } = router.query;
 
-  const allProducts = useSelector((state) => {
-    return state.allProducts;
+  const { data: shoppingCartItems } = useGetShoppingCart({
+    userId: session?.user.id,
   });
+  const updateShoppingCart = useUpdateShoppingCart();
+  const addNewToShoppingCart = useAddNewToShoppingCart();
 
-  const likedProducts = useSelector((state) => {
-    return state.likedProducts;
-  });
-
-  const selectedProduct = allProducts.find((product) => {
+  const selectedProduct = products.find((product) => {
     return product.id === productId;
   });
 
   const handleAddToCart = () => {
-    dispatch({
-      type: ADD_PRODUCT_TO_CART,
-      data: selectedProduct,
+    const shoppingCartIds = shoppingCartItems.map((product) => {
+      return product.id;
     });
+    if (status === "authenticated") {
+      if (shoppingCartIds.includes(selectedProduct.id)) {
+        updateShoppingCart.mutate({
+          ...selectedProduct,
+          userId: session.user.id,
+        });
+      } else {
+        addNewToShoppingCart.mutate({
+          ...selectedProduct,
+          userId: session.user.id,
+        });
+      }
+    } else {
+      console.log("not logged in");
+    }
   };
 
   const similarProducts = (a) => {
-    return allProducts.filter(
+    return products.filter(
       (productData) =>
-        productData.rating === selectedProduct.rating - a ||
-        productData.rating === selectedProduct.rating + a
+        productData.rating === selectedProduct?.rating - a ||
+        productData.rating === selectedProduct?.rating + a
     );
   };
 
-  useEffect(() => {
-    dispatch({
-      type: GET_PRODUCTS,
-    });
-  }, []);
-
-  if (allProducts.length === 0)
+  if (isLoading) {
     return <Box sx={{ pt: "60px", textAlign: "center" }}>Loading</Box>;
+  }
   return (
     <Box
       sx={{
@@ -77,7 +95,7 @@ const ProductPage = () => {
       }}
     >
       <Typography variant="h3" sx={{ pt: "60px", textAlign: "center" }}>
-        {selectedProduct.name}
+        {selectedProduct?.name}
       </Typography>
       <Box
         sx={{
@@ -88,7 +106,7 @@ const ProductPage = () => {
       >
         <Box
           component="img"
-          src={selectedProduct.img}
+          src={selectedProduct?.img}
           sx={{
             maxHeight: "300px",
             borderRadius: "15px",
@@ -96,12 +114,12 @@ const ProductPage = () => {
           }}
         ></Box>
         <Box sx={{ minWidth: "120px" }}>
-          <Typography>Price: {selectedProduct.price}</Typography>
-          <Typography>Category: {selectedProduct.category}</Typography>
-          <Typography>Location: {selectedProduct.location}</Typography>
-          <Typography>Rating: {selectedProduct.rating}</Typography>
+          <Typography>Price: {selectedProduct?.price}</Typography>
+          <Typography>Category: {selectedProduct?.category}</Typography>
+          <Typography>Location: {selectedProduct?.location}</Typography>
+          <Typography>Rating: {selectedProduct?.rating}</Typography>
           <Typography>
-            InStock: {JSON.stringify(selectedProduct.inStock)}
+            InStock: {JSON.stringify(selectedProduct?.inStock)}
           </Typography>
           <Button onClick={() => handleAddToCart()} color="secondary">
             Add to Cart
@@ -109,13 +127,13 @@ const ProductPage = () => {
           <br></br>
 
           {likedProducts.find(
-            (productId) => productId === selectedProduct.id
+            (productId) => productId === selectedProduct?.id
           ) ? (
             <Button
               onClick={() => {
-                dispatch({
-                  type: DELETE_LIKED_PRODUCT,
-                  data: { id: selectedProduct.id, userId: session.user.id },
+                deleteLikedProduct.mutate({
+                  id: selectedProduct.id,
+                  userId: session.user.id,
                 });
               }}
               color={"secondary"}
@@ -126,9 +144,9 @@ const ProductPage = () => {
           ) : (
             <Button
               onClick={() => {
-                dispatch({
-                  type: UPDATE_LIKED_PRODUCTS,
-                  data: { id: selectedProduct.id, userId: session.user.id },
+                updateLikedProduct.mutate({
+                  id: selectedProduct.id,
+                  userId: session.user.id,
                 });
               }}
               color={"secondary"}

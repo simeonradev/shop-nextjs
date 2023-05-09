@@ -2,10 +2,8 @@ import { Box, Typography, Button, Grid, MenuItem } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 
-import { useDispatch } from "react-redux";
-import { UPDATE_PRODUCTS } from "../core/actions";
-import { v4 as uuid } from "uuid";
 import { ControlledTextField } from "../components/ControlledTextField";
+import { useUpdateProduct } from "../core/react-query/features/products";
 
 const categories = ["car", "clothes", "electronics", "food", "garden"];
 const ratings = [1, 2, 3, 4, 5];
@@ -13,6 +11,8 @@ const locations = ["Stara Zagora", "Plovdiv", "Sofia"];
 // const inStock = [{ yes: true, no: false }];
 
 export const CreateProductModal = (props) => {
+  const updateProduct = useUpdateProduct();
+
   const { handleSubmit, control } = useForm({
     defaultValues: {
       name: "",
@@ -24,24 +24,19 @@ export const CreateProductModal = (props) => {
     },
   });
   const { data: session } = useSession();
-  const dispatch = useDispatch();
-  const unique_id = uuid();
 
-  const createProduct = (productDetails) => {
-    console.log(productDetails);
-    dispatch({
-      type: UPDATE_PRODUCTS,
-      data: {
-        ...productDetails,
-        price: Number(productDetails.price),
-        rating: Number(productDetails.rating),
-        createdBy: session.user.id,
-        id: unique_id,
-      },
+  const createProductSubmit = (productDetails) => {
+    updateProduct.mutate({
+      ...productDetails,
+      price: Number(productDetails.price),
+      rating: Number(productDetails.rating),
+      createdBy: session.user.id,
+      id: crypto.randomUUID(),
     });
 
     props.hideModal();
   };
+
   return (
     <Grid sx={{ display: "flex", p: "20px" }}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -49,7 +44,7 @@ export const CreateProductModal = (props) => {
           <Typography variant="h5">Create Product</Typography>
         </Box>
 
-        <form onSubmit={handleSubmit(createProduct)}>
+        <form onSubmit={handleSubmit(createProductSubmit)}>
           <ControlledTextField
             name="name"
             label="Name"
@@ -115,7 +110,7 @@ export const CreateProductModal = (props) => {
             label="Price"
             control={control}
             sx={{ margin: "5px 0" }}
-            inputProps={{ min: 0 }}
+            InputProps={{ inputProps: { min: 0 } }}
           />
 
           <Button

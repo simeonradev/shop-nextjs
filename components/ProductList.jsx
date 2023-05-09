@@ -1,64 +1,86 @@
-import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, IconButton } from "@mui/material";
 
 import ProductCard from "../components/ProductCard";
 import { useModal } from "./useModal";
 import { ProductPreviewModal } from "../modals/ProductPreviewModal";
-import {
-  ADD_PRODUCT_TO_CART,
-  RECENTLY_VIEWED,
-  DELETE_LIKED_PRODUCT,
-  UPDATE_LIKED_PRODUCTS,
-  GET_LIKED_PRODUCTS,
-} from "../core/actions";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useEffect } from "react";
 
 import { useSession } from "next-auth/react";
 import { LikeButtonModal } from "../modals/LikeButtonModal";
+import {
+  useGetLikedProducts,
+  useUpdateLikedProduct,
+  useDeleteLikedProduct,
+} from "../core/react-query/features/liked-products";
+
+import { useUpdateRecentlyViewed } from "../core/react-query/features/recently-viewed-products";
+import {
+  useAddNewToShoppingCart,
+  useUpdateShoppingCart,
+  useGetShoppingCart,
+} from "../core/react-query/features/shopping-cart";
 
 const ProductList = ({ products, ...rest }) => {
-  const dispatch = useDispatch();
   const { data: session, status } = useSession();
 
+  const { data: likedProducts } = useGetLikedProducts({
+    userId: session?.user.id,
+  });
+  const updateLikedProduct = useUpdateLikedProduct();
+  const deleteLikedProduct = useDeleteLikedProduct();
+
+  const updateRecentlyViewed = useUpdateRecentlyViewed();
+
+  const { data: shoppingCartItems } = useGetShoppingCart({
+    userId: session?.user.id,
+  });
+  const updateShoppingCart = useUpdateShoppingCart();
+  const addNewToShoppingCart = useAddNewToShoppingCart();
+
   const handleAddToCart = (product) => {
-    dispatch({
-      type: ADD_PRODUCT_TO_CART,
-      data: product,
+    const shoppingCartIds = shoppingCartItems.map((product) => {
+      return product.id;
     });
+
+    if (status === "authenticated") {
+      if (shoppingCartIds.includes(product.id)) {
+        updateShoppingCart.mutate({
+          ...product,
+          userId: session.user.id,
+        });
+      } else {
+        addNewToShoppingCart.mutate({
+          ...product,
+          userId: session.user.id,
+        });
+      }
+    } else {
+      console.log("not logged in");
+    }
   };
 
   const { showModal, hideModal } = useModal();
-
-  const likedProducts = useSelector((state) => {
-    return state.likedProducts;
-  });
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      dispatch({
-        type: GET_LIKED_PRODUCTS,
-        data: { userId: session?.user.id },
-      });
-    }
-  }, []);
 
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       {...rest}
     >
-      {products.map((prodDataBySearch) => {
+      {products?.map((prodDataBySearch) => {
         return (
           <ProductCard
             withoutModal
             onClick={() => {
-              dispatch({
-                type: RECENTLY_VIEWED,
-                data: prodDataBySearch.id,
-              });
+              if (status === "authenticated") {
+                updateRecentlyViewed.mutate({
+                  id: prodDataBySearch.id,
+                  userId: session.user.id,
+                });
+              } else {
+                console.log("not logged in");
+              }
             }}
             key={prodDataBySearch.id}
             {...prodDataBySearch}
@@ -91,12 +113,9 @@ const ProductList = ({ products, ...rest }) => {
                   <IconButton
                     onClick={() => {
                       if (status === "authenticated") {
-                        dispatch({
-                          type: DELETE_LIKED_PRODUCT,
-                          data: {
-                            id: prodDataBySearch.id,
-                            userId: session.user.id,
-                          },
+                        deleteLikedProduct.mutate({
+                          id: prodDataBySearch.id,
+                          userId: session.user.id,
                         });
                       } else {
                         console.log("not logged in");
@@ -110,12 +129,9 @@ const ProductList = ({ products, ...rest }) => {
                   <IconButton
                     onClick={() => {
                       if (status === "authenticated") {
-                        dispatch({
-                          type: UPDATE_LIKED_PRODUCTS,
-                          data: {
-                            id: prodDataBySearch.id,
-                            userId: session.user.id,
-                          },
+                        updateLikedProduct.mutate({
+                          id: prodDataBySearch.id,
+                          userId: session.user.id,
                         });
                       } else {
                         showModal(<LikeButtonModal hideModal={hideModal} />);

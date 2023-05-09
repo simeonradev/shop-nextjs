@@ -27,14 +27,11 @@ export default async function handler(req, res) {
     const findUser = await db
       .collection("likedProductsIds")
       .findOne({ _id: userId });
-    // .toArray();
+
     res.status(200).json({ likedProductsIds: findUser?.productIds });
   } else if (req.method === "DELETE") {
     const { id, userId } = req.body;
-    // const newLikedProductsIds = likedProductsIds.filter(
-    //   (productId) => productId !== id
-    // );
-    // likedProductsIds = newLikedProductsIds;
+
     await db
       .collection("likedProductsIds")
       .updateOne({ _id: userId }, { $pull: { productIds: id } });

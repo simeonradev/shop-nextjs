@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import ProductList from "../components/ProductList";
@@ -8,7 +7,7 @@ import SideNavBar from "../components/SideNavBar";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Box, useScrollTrigger, Fade, Fab, Typography } from "@mui/material";
 
-import { GET_PRODUCTS } from "../core/actions";
+import { useGetProducts } from "../core/react-query/features/products";
 
 /////////////////////////////Floating to Top Button///////////////////////////////////////////////
 function ScrollTop(props) {
@@ -38,32 +37,23 @@ const Search = (props) => {
   const [filteredProductsByFilters, setFilteredProductsByFilters] =
     useState(filteredBySearchTerm);
 
-  const dispatch = useDispatch();
+  const { data: products } = useGetProducts();
+
   const router = useRouter();
 
   const onFilter = (filteredProductsByFilters) => {
     setFilteredProductsByFilters(filteredProductsByFilters);
   };
 
-  const allProducts = useSelector((state) => {
-    return state.allProducts;
-  });
-
-  useEffect(() => {
-    dispatch({
-      type: GET_PRODUCTS,
-    });
-  }, []);
-
   useEffect(() => {
     setFilteredBySearchTerm(
-      allProducts.filter((data) => {
+      products?.filter((data) => {
         return data.name
           .toLowerCase()
           .includes(router.query.searchTerm?.toLowerCase());
       })
     );
-  }, [router, allProducts]);
+  }, [products, router]);
 
   // console.log(filteredBySearchTerm, filteredProductsByFilters);
   return (

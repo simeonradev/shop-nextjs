@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 
 import { useRouter } from "next/router";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 const SideNavBarBox = styled(Box)`
   background-color: #cf6f00;
@@ -51,6 +52,7 @@ const sort = (data) => {
 
 const SideNavBar = ({ data, onFilter }) => {
   const router = useRouter();
+
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [selectedInStock, setSelectedInStock] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
@@ -270,7 +272,7 @@ const SideNavBar = ({ data, onFilter }) => {
 
   /////////////////////////////////////////////////////////////////////////////////
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const newArray = filterProducts({
       location: true,
       stock: true,
@@ -289,14 +291,14 @@ const SideNavBar = ({ data, onFilter }) => {
       setValueArray([min, max]);
     }
 
-    router.query = {
-      ...router.query,
-      minPrice: min,
-      maxPrice: max,
-    };
-    router.push(router, undefined, { shallow: true });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (router.isReady) {
+      router.query = {
+        ...router.query,
+        minPrice: min,
+        maxPrice: max,
+      };
+      router.push(router, undefined, { shallow: true });
+    }
   }, [
     selectedLocation,
     selectedCategory,
@@ -344,7 +346,7 @@ const SideNavBar = ({ data, onFilter }) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, []);
 
   return (
     <Box>

@@ -1,14 +1,12 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useModal } from "../components/useModal";
 import { DataGrid } from "@mui/x-data-grid";
-import { useDispatch } from "react-redux";
-import { DELETE_PRODUCT } from "../core/actions";
 import { UpdateProductModal } from "../modals/UpdateProductModal";
-
+import { useDeleteProduct } from "../core/react-query/features/products";
 export const AdminProductTable = ({ products }) => {
   const { showModal, hideModal } = useModal();
 
-  const dispatch = useDispatch();
+  const deleteProduct = useDeleteProduct();
 
   const columns = [
     { field: "name", headerName: "Name", width: 300 },
@@ -65,11 +63,7 @@ export const AdminProductTable = ({ products }) => {
         };
 
         const onClickDelete = () => {
-          const currentRow = params.row;
-          dispatch({
-            type: DELETE_PRODUCT,
-            data: currentRow.id,
-          });
+          deleteProduct.mutate(currentRow.id);
         };
 
         return (
