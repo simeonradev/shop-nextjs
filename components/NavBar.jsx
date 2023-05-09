@@ -70,6 +70,7 @@ const NavBar = () => {
   const { data: shoppingCartItems } = useGetShoppingCart({
     userId: session?.user.id,
   });
+
   const updateShoppingCart = useUpdateShoppingCart();
   const deleteShoppingCart = useDeleteShoppingCart();
 
@@ -85,15 +86,15 @@ const NavBar = () => {
       {
         id,
         userId: session.user.id,
-      },
-      {
-        onSuccess: (data) => {
-          console.log(data);
-        },
-        onError: (data) => {
-          console.log(data);
-        },
       }
+      // {
+      //   onSuccess: (data) => {
+      //     console.log(data);
+      //   },
+      //   onError: (data) => {
+      //     console.log(data);
+      //   },
+      // }
     );
   };
 

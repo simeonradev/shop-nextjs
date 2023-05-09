@@ -16,7 +16,11 @@ import {
 } from "../core/react-query/features/liked-products";
 
 import { useUpdateRecentlyViewed } from "../core/react-query/features/recently-viewed-products";
-import { useUpdateShoppingCart } from "../core/react-query/features/shopping-cart";
+import {
+  useAddNewToShoppingCart,
+  useUpdateShoppingCart,
+  useGetShoppingCart,
+} from "../core/react-query/features/shopping-cart";
 
 const ProductList = ({ products, ...rest }) => {
   const { data: session, status } = useSession();
@@ -29,14 +33,29 @@ const ProductList = ({ products, ...rest }) => {
 
   const updateRecentlyViewed = useUpdateRecentlyViewed();
 
+  const { data: shoppingCartItems } = useGetShoppingCart({
+    userId: session?.user.id,
+  });
   const updateShoppingCart = useUpdateShoppingCart();
+  const addNewToShoppingCart = useAddNewToShoppingCart();
 
   const handleAddToCart = (product) => {
+    const shoppingCartIds = shoppingCartItems.map((product) => {
+      return product.id;
+    });
+
     if (status === "authenticated") {
-      updateShoppingCart.mutate({
-        ...product,
-        userId: session.user.id,
-      });
+      if (shoppingCartIds.includes(product.id)) {
+        updateShoppingCart.mutate({
+          ...product,
+          userId: session.user.id,
+        });
+      } else {
+        addNewToShoppingCart.mutate({
+          ...product,
+          userId: session.user.id,
+        });
+      }
     } else {
       console.log("not logged in");
     }

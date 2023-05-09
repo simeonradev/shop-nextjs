@@ -1,6 +1,3 @@
-// import { Provider } from "react-redux";
-// import { wrapper } from "../core/store";
-
 import { useState } from "react";
 
 import { GlobalModal } from "../components/useModal";
@@ -17,13 +14,7 @@ import { Hydrate, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 
-const MyApp = ({
-  Component,
-  pageProps: { session, ...pageProps },
-  // ...rest
-}) => {
-  // const { store } = wrapper.useWrappedStore(rest);
-
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const asyncStoragePersister = createAsyncStoragePersister({
     storage: localForage,
   });
@@ -31,7 +22,6 @@ const MyApp = ({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    // <Provider store={store}>
     <PersistQueryClientProvider
       client={queryClient}
       persistOptions={{ persister: asyncStoragePersister }}
@@ -55,7 +45,6 @@ const MyApp = ({
         </SessionProvider>
       </Hydrate>
     </PersistQueryClientProvider>
-    // </Provider>
   );
 };
 

@@ -14,7 +14,11 @@ import {
   useGetLikedProducts,
 } from "../../core/react-query/features/liked-products";
 
-import { useUpdateShoppingCart } from "../../core/react-query/features/shopping-cart";
+import {
+  useAddNewToShoppingCart,
+  useGetShoppingCart,
+  useUpdateShoppingCart,
+} from "../../core/react-query/features/shopping-cart";
 
 const similarProductsStyle = {
   display: "flex",
@@ -39,17 +43,32 @@ const ProductPage = () => {
 
   const { productId } = router.query;
 
+  const { data: shoppingCartItems } = useGetShoppingCart({
+    userId: session?.user.id,
+  });
   const updateShoppingCart = useUpdateShoppingCart();
+  const addNewToShoppingCart = useAddNewToShoppingCart();
 
   const selectedProduct = products.find((product) => {
     return product.id === productId;
   });
+
   const handleAddToCart = () => {
+    const shoppingCartIds = shoppingCartItems.map((product) => {
+      return product.id;
+    });
     if (status === "authenticated") {
-      updateShoppingCart.mutate({
-        ...selectedProduct,
-        userId: session.user.id,
-      });
+      if (shoppingCartIds.includes(selectedProduct.id)) {
+        updateShoppingCart.mutate({
+          ...selectedProduct,
+          userId: session.user.id,
+        });
+      } else {
+        addNewToShoppingCart.mutate({
+          ...selectedProduct,
+          userId: session.user.id,
+        });
+      }
     } else {
       console.log("not logged in");
     }
