@@ -1,34 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Didi Shop
 
-## Getting Started
+Didi Shop is a Multi-Page Application (MPA) built with Next.js, leveraging server-side rendering (SSR) for optimal performance. It serves as an online shop, developed using JavaScript and utilizing the power of React Query from Tanstack.
 
-First, run the development server:
+[Project Description]
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+In this project, I aimed to create a high-performing and responsive online shop using Next.js, a popular React framework known for its server-side rendering capabilities. Initially, I employed Redux and Redux Saga for state management and asynchronous actions. However, after careful consideration and evaluation, I made the decision to migrate to React Query, a powerful and efficient data-fetching library from Tanstack.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+By transitioning to React Query, I streamlined the data management process, allowing for seamless data fetching, caching, and synchronization. This optimization significantly improved the application's performance and reduced complexity, providing a better user experience overall.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You can explore the project by following this Vercel link: https://shop-nextjs-eight.vercel.app/
